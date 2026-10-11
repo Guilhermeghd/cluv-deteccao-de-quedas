@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Detalhes de um evento do Historico, num painel que sobe de baixo -->
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_sheet"
+    android:backgroundTint="#FFFFFF"
+    android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="18dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="18dp">
+
+        <View
+            android:id="@+id/alcaSheet"
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
+            android:background="#E6EAEF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/icoSheet"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_circulo"
+                android:backgroundTint="#FDECEA"
+                android:importantForAccessibility="no"
+                android:padding="10dp"
+                android:src="@drawable/ic_alerta"
+                android:tint="#B71C1C" />
+            <TextView
+                android:id="@+id/txtSheetTitulo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="Evento"
+                android:textColor="#1A1F24"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/txtSheetStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip"
+                android:backgroundTint="#E3F2E5"
+                android:paddingStart="12dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="4dp"
+                android:text="enviado"
+                android:textColor="#1B5E20"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/containerSheetLinhas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/txtSheetTituloMapa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="14dp"
+            android:paddingBottom="8dp"
+            android:text="Localização"
+            android:textColor="#5A6572"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+        <org.osmdroid.views.MapView
+            android:id="@+id/mapaSheet"
+            android:layout_width="match_parent"
+            android:layout_height="180dp" />
+
+        <Button
+            android:id="@+id/btnFecharSheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:minHeight="50dp"
+            app:backgroundTint="#0E7C8B"
+            app:cornerRadius="25dp"
+            android:text="Fechar"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

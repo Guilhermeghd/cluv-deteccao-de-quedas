@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp">
+        <TextView
+            android:id="@+id/txtLinhaRotulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Rótulo"
+            android:textColor="#5A6572"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/txtLinhaValor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="3"
+            android:gravity="end"
+            android:text="valor"
+            android:textColor="#1A1F24"
+            android:textSize="14sp" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E6EAEF" />
+</LinearLayout>

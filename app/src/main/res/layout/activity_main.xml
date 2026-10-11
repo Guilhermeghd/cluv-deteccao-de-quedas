@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F4F7"
+    android:orientation="vertical"
+    android:keepScreenOn="true"
+    tools:context=".MainActivity">
+
+    <!-- ===== ABA INICIO ===== -->
+    <ScrollView
+        android:id="@+id/abaInicio"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <!-- cabecalho: avatar, saudacao, data e botao de sair -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="14dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/txtAvatar"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#D6EDF0"
+                    android:gravity="center"
+                    android:text="G"
+                    android:textColor="#0B5560"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/txtOla"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Olá"
+                        android:textColor="#1A1F24"
+                        android:textSize="19sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtDataHoje"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textColor="#5A6572"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <ImageButton
+                    android:id="@+id/btnSair"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#FFFFFF"
+                    android:contentDescription="Sair da conta"
+                    android:padding="11dp"
+                    android:src="@drawable/ic_sair"
+                    android:tint="#1A1F24" />
+            </LinearLayout>
+
+            <!-- clima: temperatura, descricao, vento, umidade, pressao e risco. Tocar abre a aba Clima -->
+            <LinearLayout
+                android:id="@+id/cardClimaInicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/txtClimaTemp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--°"
+                            android:textColor="#1A1F24"
+                            android:textSize="44sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/txtClimaDesc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Aguardando a localização"
+                            android:textColor="#1A1F24"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/txtClimaDetalhe"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=" "
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/imgClimaInicio"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:contentDescription="Condição do tempo"
+                        android:src="@drawable/ic_clima"
+                        android:tint="#0E7C8B" />
+                </LinearLayout>
+                <View
+                    android:id="@+id/divisorClimaInicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#E6EAEF" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_vento"
+                            android:tint="#5A6572" />
+                        <TextView
+                            android:id="@+id/txtClimaVento"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="--"
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_umidade"
+                            android:tint="#5A6572" />
+                        <TextView
+                            android:id="@+id/txtClimaUmidade"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="--"
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_pressao"
+                            android:tint="#5A6572" />
+                        <TextView
+                            android:id="@+id/txtClimaPressao"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="--"
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtClimaRisco"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_chip"
+                    android:backgroundTint="#E6EAEF"
+                    android:paddingStart="12dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="5dp"
+                    android:text="Risco: aguardando o clima"
+                    android:textColor="#5A6572"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- status do monitoramento de queda -->
+            <LinearLayout
+                android:id="@+id/cardStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+                <ImageView
+                    android:id="@+id/imgStatus"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#D6EDF0"
+                    android:contentDescription="Monitoramento"
+                    android:padding="11dp"
+                    android:src="@drawable/ic_escudo"
+                    android:tint="#0E7C8B" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/txtStatusMonitor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Monitorando quedas"
+                        android:textColor="#1A1F24"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtStatusSensores"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Acelerômetro e giroscópio ativos"
+                        android:textColor="#5A6572"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtContagemChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip"
+                    android:backgroundTint="#D6EDF0"
+                    android:paddingStart="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="4dp"
+                    android:text="Contagem 30 s"
+                    android:textColor="#0B5560"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- quatro informacoes rapidas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:backgroundTint="#FFFFFF"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_pin"
+                            android:tint="#5A6572" />
+                        <TextView
+                            android:id="@+id/lblPosicao"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="Posição"
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/txtMiniPosicao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:backgroundTint="#FFFFFF"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_bateria"
+                            android:tint="#5A6572" />
+                        <TextView
+                            android:id="@+id/lblBateria"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="Bateria"
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/txtMiniBateria"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:backgroundTint="#FFFFFF"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_servidor"
+                            android:tint="#5A6572" />
+                        <TextView
+                            android:id="@+id/lblServidor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="Servidor"
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/txtMiniServidor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:backgroundTint="#FFFFFF"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_relogio"
+                            android:tint="#5A6572" />
+                        <TextView
+                            android:id="@+id/lblCheckinInicio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="Check-in"
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/txtMiniCheckin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- botao de panico -->
+            <LinearLayout
+                android:id="@+id/btnPanico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/bg_botao_panico"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:minHeight="76dp"
+                android:orientation="horizontal"
+                android:padding="16dp">
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_alerta"
+                    android:tint="#FFFFFF" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/txtTituloPanico"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Botão de pânico"
+                        android:textColor="#FFFFFF"
+                        android:textSize="19sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtLegendaPanico"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Envia o alerta em 5 s. Dá tempo de cancelar."
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ultimo evento -->
+            <LinearLayout
+                android:id="@+id/cardUltimoEvento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="6dp">
+                    <TextView
+                        android:id="@+id/txtTituloUltimoEvento"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Último evento"
+                        android:textColor="#5A6572"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/btnVerHistorico"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="6dp"
+                        android:text="Ver tudo"
+                        android:textColor="#0B6672"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:backgroundTint="#FFFFFF"
+                    android:orientation="vertical"
+                    android:paddingStart="14dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="4dp">
+                    <LinearLayout
+                        android:id="@+id/containerUltimoEvento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                    <TextView
+                        android:id="@+id/txtUltimoEventoVazio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="Nenhum evento ainda."
+                        android:textColor="#5A6572"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+    <!-- Conteudo das abas Trajeto, Clima, Historico e Perfil (fragments). A barra de baixo fica fora daqui, por isso e fixa -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/containerAbas"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <include layout="@layout/barra_abas" />
+</LinearLayout>

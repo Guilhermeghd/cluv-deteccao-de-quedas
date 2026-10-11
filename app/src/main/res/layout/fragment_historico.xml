@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F4F7"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/abaHistorico"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <!-- cabecalho: titulo, estado do servidor e o icone de sincronizar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/txtTituloHistoricoAba"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Histórico"
+                        android:textColor="#1A1F24"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtServidorChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_chip"
+                        android:backgroundTint="#E6EAEF"
+                        android:drawableStart="@drawable/ic_servidor"
+                        android:drawablePadding="6dp"
+                        android:drawableTint="#5A6572"
+                        android:paddingStart="12dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="5dp"
+                        android:text="Servidor: aguardando"
+                        android:textColor="#5A6572"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <ImageButton
+                    android:id="@+id/btnSincronizar"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#FFFFFF"
+                    android:contentDescription="Sincronizar com o servidor"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_atualizar"
+                    android:tint="#1A1F24" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtNuvemStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="Aparelho e servidor juntos"
+                android:textColor="#5A6572"
+                android:textSize="13sp" />
+
+            <!-- filtros (os botoes sao criados pelo codigo) -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:id="@+id/containerFiltros"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- a lista: cabecalhos de dia e um card por evento -->
+            <LinearLayout
+                android:id="@+id/containerNuvem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- nada para mostrar -->
+            <TextView
+                android:id="@+id/txtNuvemVazio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="14dp"
+                android:drawableTint="#0E7C8B"
+                android:drawableTop="@drawable/ic_historico"
+                android:gravity="center"
+                android:paddingStart="24dp"
+                android:paddingTop="48dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="48dp"
+                android:text="Nenhum evento por aqui"
+                android:textColor="#5A6572"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <!-- paginas -->
+            <LinearLayout
+                android:id="@+id/barraPaginas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="8dp"
+                android:visibility="gone">
+                <Button
+                    android:id="@+id/btnPaginaAnterior"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:minHeight="44dp"
+                    app:backgroundTint="#E6EAEF"
+                    app:cornerRadius="22dp"
+                    android:text="Anterior"
+                    android:textColor="#5A6572"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/txtPagina"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Página 1 de 1"
+                    android:textColor="#5A6572"
+                    android:textSize="13sp" />
+                <Button
+                    android:id="@+id/btnPaginaProxima"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:minHeight="44dp"
+                    app:backgroundTint="#0E7C8B"
+                    app:cornerRadius="22dp"
+                    android:text="Próxima"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

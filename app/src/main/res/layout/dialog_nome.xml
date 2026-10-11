@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Janela "Mudar o nome": o campo e o aviso de que o historico sera apagado.
+     Os textos usam a cor padrao do tema, porque a janela segue o tema do sistema. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="4dp">
+
+    <EditText
+        android:id="@+id/editNomeDialogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_campo"
+        android:hint="Seu nome"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName|textCapWords"
+        android:maxLength="40"
+        android:minHeight="50dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_card"
+        android:backgroundTint="#FEF3C7"
+        android:orientation="horizontal"
+        android:padding="12dp">
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_alerta"
+            android:tint="#6B2E07" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:lineSpacingExtra="2dp"
+            android:text="Ao mudar o nome, o histórico deste aparelho será apagado (alertas, cancelados, check-ins e rotas). Os alertas que já estão no servidor continuam lá, mas deixam de aparecer aqui, porque o servidor guarda o nome antigo."
+            android:textColor="#6B2E07"
+            android:textSize="13sp" />
+    </LinearLayout>
+</LinearLayout>

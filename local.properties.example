@@ -1,0 +1,6 @@
+## Copie este arquivo para "local.properties" (na mesma pasta) e preencha a chave.
+## O local.properties NAO vai para o Git (esta no .gitignore).
+## O Android Studio tambem escreve nele a linha sdk.dir=... sozinho.
+
+# Chave gratuita do OpenWeatherMap: https://openweathermap.org/api
+OPENWEATHER_KEY=coloque_a_sua_chave_aqui

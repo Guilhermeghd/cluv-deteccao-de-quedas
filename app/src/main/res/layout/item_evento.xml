@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Um evento do Historico: icone colorido por tipo, titulo e detalhe, hora e selo de status. Tocar abre os detalhes -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="6dp"
+    android:background="@drawable/bg_card"
+    android:backgroundTint="#FFFFFF"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/icoEvento"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_circulo"
+        android:backgroundTint="#FDECEA"
+        android:importantForAccessibility="no"
+        android:padding="10dp"
+        android:src="@drawable/ic_alerta"
+        android:tint="#B71C1C" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtEventoTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Queda leve"
+            android:textColor="#1A1F24"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/txtEventoDetalhe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="envio automático"
+            android:textColor="#5A6572"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:gravity="end"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtEventoHora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10:39"
+            android:textColor="#5A6572"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/txtEventoStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_chip"
+            android:backgroundTint="#E3F2E5"
+            android:paddingStart="10dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="3dp"
+            android:text="enviado"
+            android:textColor="#1B5E20"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

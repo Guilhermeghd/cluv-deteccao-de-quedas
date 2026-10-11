@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F4F7"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/abaPerfil"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTituloPerfilAba"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="12dp"
+                android:text="Perfil"
+                android:textColor="#1A1F24"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <!-- quem e o usuario -->
+            <LinearLayout
+                android:id="@+id/cardDados"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+                <TextView
+                    android:id="@+id/txtAvatarPerfil"
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#D6EDF0"
+                    android:gravity="center"
+                    android:text="G"
+                    android:textColor="#0B5560"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/txtNomePerfil"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nome"
+                        android:textColor="#1A1F24"
+                        android:textSize="19sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtEmailPerfil"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textColor="#5A6572"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/btnEditarNome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_chip"
+                    android:backgroundTint="#E6EAEF"
+                    android:clickable="true"
+                    android:drawableStart="@drawable/ic_lapis"
+                    android:drawablePadding="6dp"
+                    android:drawableTint="#1A1F24"
+                    android:focusable="true"
+                    android:paddingStart="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="8dp"
+                    android:text="Editar"
+                    android:textColor="#1A1F24"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="6dp"
+                android:text="SEGURANÇA"
+                android:textColor="#5A6572"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/cardAjustes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#D6EDF0"
+                    android:importantForAccessibility="no"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_relogio"
+                    android:tint="#0E7C8B" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Check-in de segurança"
+                        android:textColor="#1A1F24"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pergunta se está tudo bem durante a rota"
+                        android:textColor="#5A6572"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchCheckinPerfil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="60dp"
+                android:background="#E6EAEF" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#D6EDF0"
+                    android:importantForAccessibility="no"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_ampulheta"
+                    android:tint="#0E7C8B" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Intervalo do check-in"
+                        android:textColor="#1A1F24"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="De 1 a 180 minutos"
+                        android:textColor="#5A6572"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/btnCheckinMenos"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_circulo"
+                        android:backgroundTint="#E6EAEF"
+                        android:contentDescription="Diminuir"
+                        android:padding="7dp"
+                        android:src="@drawable/ic_menos"
+                        android:tint="#1A1F24" />
+                    <TextView
+                        android:id="@+id/txtCheckinValor"
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="15 min"
+                        android:textColor="#1A1F24"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                    <ImageButton
+                        android:id="@+id/btnCheckinMais"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_circulo"
+                        android:backgroundTint="#E6EAEF"
+                        android:contentDescription="Aumentar"
+                        android:padding="7dp"
+                        android:src="@drawable/ic_mais"
+                        android:tint="#1A1F24" />
+                </LinearLayout>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="60dp"
+                android:background="#E6EAEF" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#FDECEA"
+                    android:importantForAccessibility="no"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_alerta"
+                    android:tint="#B71C1C" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Contagem da queda"
+                        android:textColor="#1A1F24"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tempo para cancelar o alerta"
+                        android:textColor="#5A6572"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/btnContagemMenos"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_circulo"
+                        android:backgroundTint="#E6EAEF"
+                        android:contentDescription="Diminuir"
+                        android:padding="7dp"
+                        android:src="@drawable/ic_menos"
+                        android:tint="#1A1F24" />
+                    <TextView
+                        android:id="@+id/txtContagemValor"
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="30 s"
+                        android:textColor="#1A1F24"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                    <ImageButton
+                        android:id="@+id/btnContagemMais"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bg_circulo"
+                        android:backgroundTint="#E6EAEF"
+                        android:contentDescription="Aumentar"
+                        android:padding="7dp"
+                        android:src="@drawable/ic_mais"
+                        android:tint="#1A1F24" />
+                </LinearLayout>
+            </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="6dp"
+                android:text="AVISOS AOS CONTATOS"
+                android:textColor="#5A6572"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/cardAvisos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#E3F2E5"
+                    android:importantForAccessibility="no"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_sino"
+                    android:tint="#1B5E20" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Avisar meus contatos"
+                        android:textColor="#1A1F24"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="A cada alerta enviado"
+                        android:textColor="#5A6572"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchAvisarContatos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="14dp">
+                <TextView
+                    android:id="@+id/lblCanal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="6dp"
+                    android:text="Seu canal no ntfy (o contato assina este nome)"
+                    android:textColor="#5A6572"
+                    android:textSize="12sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:backgroundTint="#D6EDF0"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="14dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingBottom="6dp">
+                    <TextView
+                        android:id="@+id/txtCanalNtfy"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="monospace"
+                        android:text="cluv-..."
+                        android:textColor="#0B5560"
+                        android:textIsSelectable="true"
+                        android:textSize="14sp" />
+                    <ImageButton
+                        android:id="@+id/btnCopiarCanal"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Copiar o canal"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_copiar"
+                        android:tint="#0B5560" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/btnConvidar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:insetLeft="0dp"
+                        android:insetRight="0dp"
+                        android:minHeight="46dp"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
+                        app:backgroundTint="#0E7C8B"
+                        app:cornerRadius="23dp"
+                        app:icon="@drawable/ic_compartilhar"
+                        app:iconSize="18dp"
+                        app:iconTint="#FFFFFF"
+                        android:text="Convidar"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+                    <Button
+                        android:id="@+id/btnTesteAviso"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:insetLeft="0dp"
+                        android:insetRight="0dp"
+                        android:minHeight="46dp"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
+                        app:cornerRadius="23dp"
+                        app:icon="@drawable/ic_enviar"
+                        app:iconSize="18dp"
+                        app:iconTint="#0E7C8B"
+                        app:strokeColor="#0E7C8B"
+                        app:strokeWidth="1.5dp"
+                        android:text="Enviar teste"
+                        android:textColor="#0E7C8B"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/btnNovoCanal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingTop="14dp"
+                    android:text="Gerar um novo canal"
+                    android:textColor="#5A6572"
+                    android:textSize="13sp" />
+            </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="6dp"
+                android:text="FERRAMENTAS"
+                android:textColor="#5A6572"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/cardFerramentas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/btnTestarSensores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#E6F1FB"
+                    android:importantForAccessibility="no"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_sensores"
+                    android:tint="#0C447C" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Testar sensores"
+                        android:textColor="#1A1F24"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Leitura ao vivo de cada sensor"
+                        android:textColor="#5A6572"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_seta_direita"
+                    android:tint="#5A6572" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="60dp"
+                android:background="#E6EAEF" />
+            <LinearLayout
+                android:id="@+id/btnSimularQueda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#FEF3C7"
+                    android:importantForAccessibility="no"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_play"
+                    android:tint="#6B2E07" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Simular queda"
+                        android:textColor="#1A1F24"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Abre o alerta com um valor de teste"
+                        android:textColor="#5A6572"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_seta_direita"
+                    android:tint="#5A6572" />
+            </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSairPerfil"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="8dp"
+                android:minHeight="50dp"
+                app:cornerRadius="25dp"
+                app:icon="@drawable/ic_sair"
+                app:iconTint="#C62828"
+                app:strokeColor="#C62828"
+                app:strokeWidth="1.5dp"
+                android:text="Sair da conta"
+                android:textColor="#C62828"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

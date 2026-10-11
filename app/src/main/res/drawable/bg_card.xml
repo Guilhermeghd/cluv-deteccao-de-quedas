@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Card arredondado da tela Inicio. A cor vem do android:backgroundTint (assim o tema escuro consegue trocar) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FFFFFFFF" />
+    <corners android:radius="18dp" />
+</shape>

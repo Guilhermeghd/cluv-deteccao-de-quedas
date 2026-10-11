@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Janela "Testar sensores" (abre pelo Perfil): mostra a leitura de cada sensor ao vivo -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F4F7"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/abaSensores"
+        android:background="#F2F4F7"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="14dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txtTituloSensoresAba"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Testar sensores"
+                    android:textColor="#1A1F24"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/txtModoTema"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_chip"
+                    android:backgroundTint="#E6EAEF"
+                    android:paddingStart="12dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="5dp"
+                    android:text="Modo claro automático"
+                    android:textColor="#5A6572"
+                    android:textSize="13sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/cardSensores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/lblAcel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Aceleração"
+                        android:textColor="#5A6572"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/txtAcelerometro"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:gravity="end"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <View
+                    android:id="@+id/divisorSensor1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E6EAEF" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/lblGiro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rotação"
+                        android:textColor="#5A6572"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/txtGiroscopio"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:gravity="end"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <View
+                    android:id="@+id/divisorSensor2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E6EAEF" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/lblProx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Proximidade"
+                        android:textColor="#5A6572"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/txtProximidade"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:gravity="end"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <View
+                    android:id="@+id/divisorSensor3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E6EAEF" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/lblLuz"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Luminosidade"
+                        android:textColor="#5A6572"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/txtLuz"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:gravity="end"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <View
+                    android:id="@+id/divisorSensor4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E6EAEF" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/lblBaro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Barômetro"
+                        android:textColor="#5A6572"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/txtBarometro"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:gravity="end"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <View
+                    android:id="@+id/divisorSensor5"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E6EAEF" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/lblTemp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Temperatura"
+                        android:textColor="#5A6572"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/txtTemperatura"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:gravity="end"
+                        android:text="--"
+                        android:textColor="#1A1F24"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/cardLocalizacao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txtTituloLocalizacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="6dp"
+                    android:text="Localização"
+                    android:textColor="#1A1F24"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/txtLocalizacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="4dp"
+                    android:text="--"
+                    android:textColor="#1A1F24"
+                    android:textSize="15sp" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/txtNotaTema"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="O tema escuro do app liga sozinho quando o sensor de luz marca menos de 50 lux."
+                android:textColor="#5A6572"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnFecharSensores"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:minHeight="52dp"
+        app:backgroundTint="#0E7C8B"
+        app:cornerRadius="26dp"
+        android:text="Fechar"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+</LinearLayout>

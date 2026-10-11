@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tela ROTA (o arquivo ainda se chama "trajeto"): mapa, meio de transporte, progresso e check-in em cima; barra fixa embaixo -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F4F7"
+    android:orientation="vertical"
+    android:keepScreenOn="true">
+
+    <!-- Parte de cima: rola. A barra da rota fica fora daqui, fixa embaixo -->
+    <ScrollView
+        android:id="@+id/abaTrajeto"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <!-- cabecalho: titulo, subtitulo e o estado do GPS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="12dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/txtTituloTrajetoAba"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Rota"
+                        android:textColor="#1A1F24"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtSubTrajeto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Planeje e acompanhe seu percurso"
+                        android:textColor="#5A6572"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtGpsChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_chip"
+                    android:backgroundTint="#E6EAEF"
+                    android:paddingStart="12dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="5dp"
+                    android:text="Sem GPS"
+                    android:textColor="#5A6572"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- como a pessoa vai: a pe, bicicleta ou moto (os tres botoes sao criados pelo codigo) -->
+            <LinearLayout
+                android:id="@+id/containerMeios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp" />
+
+            <!-- mapa -->
+            <LinearLayout
+                android:id="@+id/cardMapa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:orientation="vertical"
+                android:padding="6dp">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <org.osmdroid.views.MapView
+                        android:id="@+id/mapa"
+                        android:layout_width="match_parent"
+                        android:layout_height="320dp" />
+                    <ImageButton
+                        android:id="@+id/btnCentralizar"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_gravity="bottom|end"
+                        android:layout_margin="12dp"
+                        android:background="@drawable/bg_circulo"
+                        android:backgroundTint="#FFFFFF"
+                        android:contentDescription="Centralizar no mapa"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_localizacao"
+                        android:tint="#0E7C8B" />
+                </FrameLayout>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/txtRotaInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="4dp"
+                android:text="Toque no mapa para escolher o destino."
+                android:textColor="#5A6572"
+                android:textSize="13sp" />
+
+            <!-- tracar e limpar a rota -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="10dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnTracarRota"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="2"
+                    android:minHeight="48dp"
+                    app:backgroundTint="#0E7C8B"
+                    app:cornerRadius="24dp"
+                    android:text="Traçar rota"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+                <Button
+                    android:id="@+id/btnLimparRota"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:minHeight="48dp"
+                    app:backgroundTint="#5A6572"
+                    app:cornerRadius="24dp"
+                    android:text="Limpar"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <!-- progresso: so aparece durante a rota, quando ja existe uma rota tracada -->
+            <LinearLayout
+                android:id="@+id/cardProgresso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:orientation="vertical"
+                android:padding="14dp"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/txtProgressoFaltam"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Faltam --"
+                        android:textColor="#1A1F24"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtProgressoTempo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#5A6572"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/barraProgresso"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="8dp"
+                    android:max="1000"
+                    android:progress="0"
+                    android:progressBackgroundTint="#E6EAEF"
+                    android:progressTint="#0E7C8B" />
+            </LinearLayout>
+
+            <!-- check-in: so o status; ajustar e no Perfil (tocar leva para la) -->
+            <LinearLayout
+                android:id="@+id/cardCheckin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+                <ImageView
+                    android:id="@+id/imgCheckin"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#D6EDF0"
+                    android:contentDescription="Check-in"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_relogio"
+                    android:tint="#0E7C8B" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/txtTituloCheckin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Check-in de segurança"
+                        android:textColor="#1A1F24"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtProximoCheckin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Check-in desligado"
+                        android:textColor="#0B6672"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtIntervaloCheckin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Perguntar a cada 15 min · ajuste no Perfil"
+                        android:textColor="#5A6572"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_seta_direita"
+                    android:tint="#5A6572" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtLegendaMapa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="4dp"
+                android:text="Linha azul: por onde você andou. Linha verde: rota até o destino."
+                android:textColor="#5A6572"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/txtAvisoApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="Mantenha o app aberto: os sensores só funcionam com a tela ligada."
+                android:textColor="#5A6572"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Barra da rota: fica fixa embaixo, com o botao sempre a vista -->
+    <View
+        android:id="@+id/divisorTrajeto"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDE2E8" />
+    <LinearLayout
+        android:id="@+id/barraTrajeto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txtTrajetoKm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0,00 km"
+                    android:textColor="#1A1F24"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/lblDistancia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="distância"
+                    android:textColor="#5A6572"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txtTrajetoMin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00"
+                    android:textColor="#1A1F24"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/lblTempo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="tempo"
+                    android:textColor="#5A6572"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txtTrajetoVel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0,0 km/h"
+                    android:textColor="#1A1F24"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/lblVelocidade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="velocidade"
+                    android:textColor="#5A6572"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/txtRotaBarra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_chip"
+            android:backgroundTint="#D6EDF0"
+            android:paddingStart="12dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="5dp"
+            android:text="Rota"
+            android:textColor="#0B5560"
+            android:textSize="13sp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/txtTrajetoStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="6dp"
+            android:paddingBottom="8dp"
+            android:text="Nenhuma rota em andamento"
+            android:textColor="#5A6572"
+            android:textSize="12sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnTrajeto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="2"
+                android:minHeight="52dp"
+                app:backgroundTint="#0E7C8B"
+                app:cornerRadius="26dp"
+                android:text="Iniciar rota"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/btnPanicoTrajeto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:minHeight="52dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:backgroundTint="#C62828"
+                app:cornerRadius="26dp"
+                android:text="Pânico"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

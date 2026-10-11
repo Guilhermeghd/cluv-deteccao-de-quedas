@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F4F7"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/abaClima"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <!-- cabecalho: titulo, "atualizado as..." e o botao de atualizar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="14dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/txtTituloClimaAba"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Clima"
+                        android:textColor="#1A1F24"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtClimaAtualizado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sem dados ainda"
+                        android:textColor="#5A6572"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <ImageButton
+                    android:id="@+id/btnClimaAtualizar"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/bg_circulo"
+                    android:backgroundTint="#FFFFFF"
+                    android:contentDescription="Atualizar clima"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_atualizar"
+                    android:tint="#1A1F24" />
+            </LinearLayout>
+
+            <!-- aviso (sem GPS, sem internet...) -->
+            <LinearLayout
+                android:id="@+id/bannerClima"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#E8EEF3"
+                android:orientation="horizontal"
+                android:padding="14dp"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/imgBanner"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription=""
+                    android:src="@drawable/ic_info"
+                    android:tint="#3A4651" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/txtBannerTitulo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#1A1F24"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtBannerTexto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="2dp"
+                        android:text=""
+                        android:textColor="#3A4651"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- temperatura, descricao, sensacao e cidade -->
+            <LinearLayout
+                android:id="@+id/cardClimaHero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#FFFFFF"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/txtClimaTemp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--°"
+                            android:textColor="#1A1F24"
+                            android:textSize="58sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/txtClimaDescricao"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#1A1F24"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/txtClimaSensacao"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="2dp"
+                            android:text=""
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/imgClimaIcone"
+                        android:layout_width="84dp"
+                        android:layout_height="84dp"
+                        android:contentDescription="Condição do tempo"
+                        android:src="@drawable/ic_clima_sol"
+                        android:tint="#0E7C8B" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtClimaCidade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_chip"
+                    android:backgroundTint="#E6EAEF"
+                    android:drawableStart="@drawable/ic_pin"
+                    android:drawablePadding="6dp"
+                    android:drawableTint="#5A6572"
+                    android:paddingStart="12dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="5dp"
+                    android:text="--"
+                    android:textColor="#5A6572"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- risco: a cor muda (verde, amarelo ou vermelho) -->
+            <LinearLayout
+                android:id="@+id/faixaRisco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#E3F2E5"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/imgRisco"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:contentDescription="Risco"
+                        android:src="@drawable/ic_escudo"
+                        android:tint="#1B5E20" />
+                    <TextView
+                        android:id="@+id/txtRiscoTitulo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Risco baixo"
+                        android:textColor="#1B5E20"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtRiscoMotivos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
+                    android:text=""
+                    android:textColor="#1B5E20"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- detalhes -->
+            <LinearLayout
+                android:id="@+id/gradeClima"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/cellVento"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/bg_card"
+                        android:backgroundTint="#FFFFFF"
+                        android:minHeight="78dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/icoVento"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_vento"
+                                android:tint="#5A6572" />
+                            <TextView
+                                android:id="@+id/lblClimaVento"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="Vento"
+                                android:textColor="#5A6572"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtClimaVento"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="--"
+                            android:textColor="#1A1F24"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/txtClimaRajada"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#5A6572"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/cellChuva"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_card"
+                        android:backgroundTint="#FFFFFF"
+                        android:minHeight="78dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/icoChuva"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_gota"
+                                android:tint="#5A6572" />
+                            <TextView
+                                android:id="@+id/lblClimaChuva"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="Chuva"
+                                android:textColor="#5A6572"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtClimaChuva"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="--"
+                            android:textColor="#1A1F24"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/cellUmidade"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/bg_card"
+                        android:backgroundTint="#FFFFFF"
+                        android:minHeight="78dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/icoUmidade"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_umidade"
+                                android:tint="#5A6572" />
+                            <TextView
+                                android:id="@+id/lblClimaUmidade"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="Umidade"
+                                android:textColor="#5A6572"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtClimaUmidade"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="--"
+                            android:textColor="#1A1F24"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/cellPressao"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_card"
+                        android:backgroundTint="#FFFFFF"
+                        android:minHeight="78dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/icoPressao"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_pressao"
+                                android:tint="#5A6572" />
+                            <TextView
+                                android:id="@+id/lblClimaPressao"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="Pressão"
+                                android:textColor="#5A6572"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtClimaPressao"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="--"
+                            android:textColor="#1A1F24"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/cellVisibilidade"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/bg_card"
+                        android:backgroundTint="#FFFFFF"
+                        android:minHeight="78dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/icoVisibilidade"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_visibilidade"
+                                android:tint="#5A6572" />
+                            <TextView
+                                android:id="@+id/lblClimaVisibilidade"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="Visibilidade"
+                                android:textColor="#5A6572"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtClimaVisibilidade"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="--"
+                            android:textColor="#1A1F24"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/cellNuvens"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_card"
+                        android:backgroundTint="#FFFFFF"
+                        android:minHeight="78dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/icoNuvens"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_clima_nuvem"
+                                android:tint="#5A6572" />
+                            <TextView
+                                android:id="@+id/lblClimaNuvens"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="Nuvens"
+                                android:textColor="#5A6572"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtClimaNuvens"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="--"
+                            android:textColor="#1A1F24"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/cardSol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:backgroundTint="#FFFFFF"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
+                    <LinearLayout
+                        android:id="@+id/cellNascer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:id="@+id/icoNascer"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_nascer"
+                            android:tint="#0E7C8B" />
+                        <TextView
+                            android:id="@+id/lblClimaNascer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="Nascer"
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtClimaNascer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="--:--"
+                            android:textColor="#1A1F24"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/cellPor"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:id="@+id/icoPor"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_por"
+                            android:tint="#0E7C8B" />
+                        <TextView
+                            android:id="@+id/lblClimaPor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="Pôr do sol"
+                            android:textColor="#5A6572"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtClimaPor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="--:--"
+                            android:textColor="#1A1F24"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
