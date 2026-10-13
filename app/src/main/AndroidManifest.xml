@@ -21,7 +21,7 @@
         android:theme="@style/Theme.Cluv">
         <!-- Primeira tela: login -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".telas.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
@@ -33,21 +33,21 @@
         </activity>
 
         <activity
-            android:name=".CadastroActivity"
+            android:name=".telas.CadastroActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
         <!-- Tela Inicio (deteccao de queda): so abre depois do login -->
         <activity
-            android:name=".MainActivity"
+            android:name=".telas.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
 
         <!-- Tela vermelha da contagem regressiva -->
         <activity
-            android:name=".AlertaActivity"
+            android:name=".telas.AlertaActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
     </application>
