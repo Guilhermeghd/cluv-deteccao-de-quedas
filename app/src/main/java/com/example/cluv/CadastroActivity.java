@@ -1,6 +1,5 @@
-package com.example.cluv.telas;
+package com.example.cluv;
 
-import com.example.cluv.R;
 import com.example.cluv.dados.Sessao;
 import com.example.cluv.dados.UsuarioDbHelper;
 import com.example.cluv.modelo.Usuario;

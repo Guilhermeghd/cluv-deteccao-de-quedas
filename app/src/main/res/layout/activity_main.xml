@@ -9,7 +9,7 @@
     android:background="#F2F4F7"
     android:orientation="vertical"
     android:keepScreenOn="true"
-    tools:context=".telas.MainActivity">
+    tools:context=".MainActivity">
 
     <!-- ===== ABA INICIO ===== -->
     <ScrollView

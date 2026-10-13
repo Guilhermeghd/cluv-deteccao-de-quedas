@@ -9,7 +9,7 @@
     android:background="#B71C1C"
     android:keepScreenOn="true"
     android:orientation="vertical"
-    tools:context=".telas.AlertaActivity">
+    tools:context=".AlertaActivity">
 
     <LinearLayout
         android:id="@+id/layoutAlerta"

@@ -1,6 +1,5 @@
-package com.example.cluv.telas;
+package com.example.cluv;
 
-import com.example.cluv.R;
 import com.example.cluv.api.Api;
 import com.example.cluv.api.ClimaApi;
 import com.example.cluv.api.RotaApi;

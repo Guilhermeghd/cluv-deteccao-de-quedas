@@ -7,7 +7,7 @@
     android:background="#F2F4F7"
     android:fillViewport="true"
     android:fitsSystemWindows="true"
-    tools:context=".telas.CadastroActivity">
+    tools:context=".CadastroActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
