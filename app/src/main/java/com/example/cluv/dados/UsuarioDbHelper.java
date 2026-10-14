@@ -13,16 +13,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Banco SQLite do aparelho (arquivo "cluv.db"). Guarda os usuarios e o historico de eventos de cada um.
- * O SQLiteOpenHelper cria o banco na primeira vez e abre nas seguintes.
- */
+
 public class UsuarioDbHelper extends SQLiteOpenHelper {
 
     private static final String BANCO = "cluv.db";
 
-    // versao 1 = so usuarios | versao 2 = usuarios + historico de eventos | versao 3 = eventos com "extra" (detalhes)
-    // versao 4 = contatos de confianca | versao 5 = tira os contatos (o aviso agora e pelo canal do ntfy)
+
     private static final int VERSAO = 5;
 
     private static final int MAX_EVENTOS_GUARDADOS = 200;
@@ -56,24 +52,17 @@ public class UsuarioDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int versaoAntiga, int versaoNova) {
-        // Quem ja tinha o app na versao 1 ganha a tabela de eventos, SEM perder os usuarios cadastrados.
         if (versaoAntiga < 2) {
             db.execSQL(SQL_CRIAR_EVENTO);   // ja nasce com a coluna "extra"
         } else if (versaoAntiga < 3) {
-            // quem estava na versao 2 ganha so a coluna nova, SEM perder os eventos que ja tem
             db.execSQL("ALTER TABLE evento ADD COLUMN extra TEXT");
         }
-        // quem ja tinha a tabela de contatos (versao 4) ve ela apagada; usuarios e eventos continuam
         if (versaoAntiga < 5) {
             db.execSQL("DROP TABLE IF EXISTS contato");
         }
     }
 
-    // ============================================================
-    //  USUARIOS
-    // ============================================================
 
-    /** O e-mail ja tem cadastro? */
     public boolean emailExiste(String email) {
         try (Cursor c = getReadableDatabase().rawQuery(
                 "SELECT 1 FROM usuario WHERE email = ?", new String[]{email})) {
@@ -81,7 +70,6 @@ public class UsuarioDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    /** Cadastra um usuario novo. Devolve o id, ou -1 se der erro (por exemplo e-mail repetido). */
     public long cadastrar(String nome, String email, String senha) {
         String salt = SenhaUtil.gerarSalt();
 
@@ -95,7 +83,6 @@ public class UsuarioDbHelper extends SQLiteOpenHelper {
         return getWritableDatabase().insert("usuario", null, valores);
     }
 
-    /** Confere e-mail e senha. Devolve o usuario, ou null se estiver errado. */
     public Usuario autenticar(String email, String senha) {
         try (Cursor c = getReadableDatabase().rawQuery(
                 "SELECT id, nome, salt, senha_hash FROM usuario WHERE email = ?", new String[]{email})) {
@@ -115,23 +102,17 @@ public class UsuarioDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    /** Troca o nome do usuario (o e-mail continua o mesmo). */
     public void atualizarNome(long usuarioId, String novoNome) {
         ContentValues valores = new ContentValues();
         valores.put("nome", novoNome);
         getWritableDatabase().update("usuario", valores, "id = ?", new String[]{String.valueOf(usuarioId)});
     }
 
-    // ============================================================
-    //  HISTORICO DE EVENTOS (cada usuario ve so os dele)
-    // ============================================================
 
-    /** Guarda um evento e apaga os mais antigos alem dos ultimos 200 daquele usuario. */
     public void registrarEvento(long usuarioId, String titulo, String detalhe, String status) {
         registrarEvento(usuarioId, titulo, detalhe, status, null);
     }
 
-    /** Igual ao de cima, mas guarda tambem o "extra": linhas "Campo: valor" que aparecem na janela de detalhes. */
     public void registrarEvento(long usuarioId, String titulo, String detalhe, String status, String extra) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -150,7 +131,6 @@ public class UsuarioDbHelper extends SQLiteOpenHelper {
                 new Object[]{usuarioId, usuarioId});
     }
 
-    /** Os eventos mais recentes do usuario (o mais novo primeiro). */
     public List<Evento> listarEventos(long usuarioId, int limite) {
         List<Evento> lista = new ArrayList<>();
 

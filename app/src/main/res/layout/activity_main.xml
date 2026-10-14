@@ -11,7 +11,6 @@
     android:keepScreenOn="true"
     tools:context=".MainActivity">
 
-    <!-- ===== ABA INICIO ===== -->
     <ScrollView
         android:id="@+id/abaInicio"
         android:layout_width="match_parent"
@@ -24,7 +23,6 @@
             android:padding="16dp"
             android:orientation="vertical">
 
-            <!-- cabecalho: avatar, saudacao, data e botao de sair -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,7 +75,6 @@
                     android:tint="#1A1F24" />
             </LinearLayout>
 
-            <!-- clima: temperatura, descricao, vento, umidade, pressao e risco. Tocar abre a aba Clima -->
             <LinearLayout
                 android:id="@+id/cardClimaInicio"
                 android:layout_width="match_parent"
@@ -222,7 +219,6 @@
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <!-- status do monitoramento de queda -->
             <LinearLayout
                 android:id="@+id/cardStatus"
                 android:layout_width="match_parent"
@@ -281,7 +277,6 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <!-- quatro informacoes rapidas -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -451,7 +446,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- botao de panico -->
             <LinearLayout
                 android:id="@+id/btnPanico"
                 android:layout_width="match_parent"
@@ -494,7 +488,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- ultimo evento -->
             <LinearLayout
                 android:id="@+id/cardUltimoEvento"
                 android:layout_width="match_parent"
@@ -558,7 +551,6 @@
     </ScrollView>
 
 
-    <!-- Conteudo das abas Trajeto, Clima, Historico e Perfil (fragments). A barra de baixo fica fora daqui, por isso e fixa -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/containerAbas"
         android:visibility="gone"

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Tela ROTA (o arquivo ainda se chama "trajeto"): mapa, meio de transporte, progresso e check-in em cima; barra fixa embaixo -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,7 +9,6 @@
     android:orientation="vertical"
     android:keepScreenOn="true">
 
-    <!-- Parte de cima: rola. A barra da rota fica fora daqui, fixa embaixo -->
     <ScrollView
         android:id="@+id/abaTrajeto"
         android:layout_width="match_parent"
@@ -23,7 +21,6 @@
             android:padding="16dp"
             android:orientation="vertical">
 
-            <!-- cabecalho: titulo, subtitulo e o estado do GPS -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,7 +64,6 @@
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <!-- como a pessoa vai: a pe, bicicleta ou moto (os tres botoes sao criados pelo codigo) -->
             <LinearLayout
                 android:id="@+id/containerMeios"
                 android:layout_width="match_parent"
@@ -75,7 +71,6 @@
                 android:orientation="horizontal"
                 android:paddingBottom="10dp" />
 
-            <!-- mapa -->
             <LinearLayout
                 android:id="@+id/cardMapa"
                 android:layout_width="match_parent"
@@ -116,7 +111,6 @@
                 android:textColor="#5A6572"
                 android:textSize="13sp" />
 
-            <!-- tracar e limpar a rota -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,7 +143,6 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-            <!-- progresso: so aparece durante a rota, quando ja existe uma rota tracada -->
             <LinearLayout
                 android:id="@+id/cardProgresso"
                 android:layout_width="match_parent"
@@ -193,7 +186,6 @@
                     android:progressTint="#0E7C8B" />
             </LinearLayout>
 
-            <!-- check-in: so o status; ajustar e no Perfil (tocar leva para la) -->
             <LinearLayout
                 android:id="@+id/cardCheckin"
                 android:layout_width="match_parent"
@@ -277,7 +269,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Barra da rota: fica fixa embaixo, com o botao sempre a vista -->
     <View
         android:id="@+id/divisorTrajeto"
         android:layout_width="match_parent"

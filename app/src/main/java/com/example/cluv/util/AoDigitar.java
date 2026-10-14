@@ -3,7 +3,6 @@ package com.example.cluv.util;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-/** Roda uma acao toda vez que o texto de um campo muda (assim nao precisa escrever os 3 metodos do TextWatcher). */
 public class AoDigitar implements TextWatcher {
 
     private final Runnable acao;

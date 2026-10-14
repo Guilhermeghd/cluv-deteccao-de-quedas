@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Janela "Mudar o nome": o campo e o aviso de que o historico sera apagado.
-     Os textos usam a cor padrao do tema, porque a janela segue o tema do sistema. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

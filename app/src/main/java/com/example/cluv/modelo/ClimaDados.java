@@ -4,33 +4,28 @@ import com.example.cluv.R;
 
 import org.json.JSONObject;
 
-/**
- * Os dados do clima que vem do OpenWeatherMap (em JSON) e a regra de risco.
- */
+
 public class ClimaDados {
 
-    // o ultimo clima consultado (a aba Clima e o aviso antes do trajeto usam)
     public static ClimaDados ultimo = null;
     public static long ultimoEmMs = 0;
 
-    public int idCondicao;            // codigo do tempo (200 = trovoada, 500 = chuva, 800 = ceu limpo...)
-    public String icone = "";         // termina com "n" quando e de noite
+    public int idCondicao;
+    public String icone = "";
     public String descricao = "";
-    public String cidade = "";        // o nome do lugar, ex.: "Presidente Prudente" (pode vir vazio)
+    public String cidade = "";
     public double temperatura, sensacao, minima, maxima;
     public double ventoKmh = 0;
-    public double rajadaKmh = 0;      // 0 = a API nao mandou
-    public double chuvaMmH = 0;       // 0 = nao esta chovendo
+    public double rajadaKmh = 0;
+    public double chuvaMmH = 0;
     public int umidade, pressao, nuvens;
-    public int visibilidadeM = -1;    // -1 = a API nao mandou
+    public int visibilidadeM = -1;
     public String nascer = "--:--";
     public String por = "--:--";
 
-    // resultado da regra de risco
-    public int nivelRisco = 0;        // 0 = baixo, 1 = atencao, 2 = perigo
+    public int nivelRisco = 0;
     public String motivosRisco = "";
 
-    /** Escolhe o desenho pelo codigo do tempo. De noite, ceu limpo vira lua. */
     public int iconeDrawable() {
         boolean noite = icone.endsWith("n");
 
@@ -56,7 +51,6 @@ public class ClimaDados {
         return R.drawable.ic_clima_nuvem;
     }
 
-    /** Le o JSON da API e devolve os dados prontos. */
     public static ClimaDados lerJson(String texto) throws Exception {
         JSONObject json = new JSONObject(texto);
         ClimaDados c = new ClimaDados();
@@ -97,7 +91,6 @@ public class ClimaDados {
 
         c.visibilidadeM = json.optInt("visibility", -1);
 
-        // nascer e por do sol vem em segundos; "timezone" e o fuso do lugar em segundos
         JSONObject sys = json.optJSONObject("sys");
         int fuso = json.optInt("timezone", 0);
         if (sys != null) {
@@ -109,7 +102,6 @@ public class ClimaDados {
         return c;
     }
 
-    /** Transforma os segundos da API em "HH:mm" na hora do lugar. */
     private static String hora(long segundos, int fuso) {
         if (segundos == 0) {
             return "--:--";
@@ -118,12 +110,10 @@ public class ClimaDados {
         return String.format("%02d:%02d", minutosDoDia / 60, minutosDoDia % 60);
     }
 
-    /** Regra de risco: 0 = baixo (verde), 1 = atencao (amarelo), 2 = perigo (vermelho). */
     public void calcularRisco() {
         nivelRisco = 0;
         motivosRisco = "";
 
-        // chuva e trovoada
         if (idCondicao >= 200 && idCondicao < 300) {
             nivelRisco = 2;
             motivosRisco += "Trovoada: evite sair agora.\n";
@@ -135,7 +125,6 @@ public class ClimaDados {
             motivosRisco += "Chuva: pista molhada e visibilidade reduzida.\n";
         }
 
-        // vento
         if (ventoKmh >= 60) {
             nivelRisco = 2;
             motivosRisco += "Vento de " + Math.round(ventoKmh) + " km/h: perigoso para moto e bicicleta.\n";
@@ -144,7 +133,6 @@ public class ClimaDados {
             motivosRisco += "Vento de " + Math.round(ventoKmh) + " km/h: redobre o cuidado.\n";
         }
 
-        // visibilidade
         if (visibilidadeM >= 0 && visibilidadeM < 1000) {
             nivelRisco = 2;
             motivosRisco += "Visibilidade muito baixa: " + visibilidadeM + " m.\n";

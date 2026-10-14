@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private ImageButton btnOlhoLogin;
 
     private UsuarioDbHelper banco;
-    private Tema tema;   // claro/escuro pelo sensor de luz
+    private Tema tema;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
-        // fundo claro: icones da barra de status escuros
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
                 .setAppearanceLightStatusBars(true);
 
@@ -64,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         btnIrCadastro.setOnClickListener(v -> startActivity(new Intent(this, CadastroActivity.class)));
         btnOlhoLogin.setOnClickListener(v -> CampoForm.alternarSenha(editSenha, btnOlhoLogin));
 
-        // ao digitar: some o erro daquele campo e o botao fica verde-azulado quando os dois estao preenchidos
         editEmail.addTextChangedListener(new AoDigitar(() -> {
             CampoForm.limparErro(editEmail, txtErroEmail);
             atualizarBotao();

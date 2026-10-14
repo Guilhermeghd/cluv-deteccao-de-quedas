@@ -49,14 +49,8 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Tela HISTORICO: junta numa lista so
- *  - os eventos do aparelho (SQLite): alertas, cancelados, falhas, check-ins e trajetos
- *  - os alertas que estao no servidor (nuvem)
- * Um alerta que aparece nos dois vira uma linha so. Tocar num evento abre os detalhes (painel que sobe de baixo).
- * Os botoes de cima filtram a lista por tipo e a lista aparece de 10 em 10 (paginas).
- */
-public class HistoricoFragment extends Fragment {
+
+public class HistoricoActivity extends Fragment {
 
     // os filtros
     private static final int TODOS = 0;
@@ -68,12 +62,12 @@ public class HistoricoFragment extends Fragment {
     private static final String[] NOMES_FILTROS = {"Todos", "Alertas", "Cancelados", "Falhas", "Check-ins", "Rotas"};
 
     private static final long UM_MINUTO = 60000;
-    private static final long TOLERANCIA_MS = 180000;   // alerta do aparelho e do servidor "sao o mesmo" se a hora bate em 3 min
-    private static final int POR_PAGINA = 10;   // quantos eventos aparecem por pagina
+    private static final long TOLERANCIA_MS = 180000;
+    private static final int POR_PAGINA = 10;
 
     private TextView txtServidorChip, txtNuvemStatus, txtNuvemVazio;
     private LinearLayout containerNuvem, containerFiltros;
-    private View btnSincronizar;          // o icone de sincronizar, no canto de cima
+    private View btnSincronizar;
     private View barraPaginas;
     private Button btnPaginaAnterior, btnPaginaProxima;
     private TextView txtPagina;
@@ -81,20 +75,19 @@ public class HistoricoFragment extends Fragment {
     private final TextView[] botoesFiltro = new TextView[NOMES_FILTROS.length];
 
     private int filtroAtual = TODOS;
-    private int paginaAtual = 0;   // comeca em 0 (a tela mostra "Página 1")
-    private List<RegistroNuvem> registrosNuvem = new ArrayList<>();   // ultimo que veio do servidor
-    private String nomeDaNuvem = "";   // o nome do usuario quando a lista da nuvem foi baixada
+    private int paginaAtual = 0;
+    private List<RegistroNuvem> registrosNuvem = new ArrayList<>();
+    private String nomeDaNuvem = "";
     private long ultimaSincronizacao = 0;
     private boolean sincronizando = false;
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private UsuarioDbHelper banco;
 
-    /** Uma linha da lista: o evento pronto para mostrar, a que filtro ele pertence e (se tiver) o registro do servidor. */
     private static class Item {
         Evento evento;
         int tipo;
-        RegistroNuvem nuvem;   // null = este evento nao esta no servidor
+        RegistroNuvem nuvem;
 
         Item(Evento evento, int tipo, RegistroNuvem nuvem) {
             this.evento = evento;
@@ -139,7 +132,6 @@ public class HistoricoFragment extends Fragment {
         atualizar();
     }
 
-    /** As abas so escondem/mostram o fragment: ao voltar para o Historico atualiza a lista. */
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -158,7 +150,6 @@ public class HistoricoFragment extends Fragment {
     private void atualizar() {
         pintarChipServidor();
 
-        // se o nome mudou no Perfil, a lista da nuvem de antes nao vale mais (ela e achada pelo nome)
         String nomeAgora = Sessao.nome(requireContext());
         if (!nomeAgora.equals(nomeDaNuvem)) {
             nomeDaNuvem = nomeAgora;
@@ -167,15 +158,13 @@ public class HistoricoFragment extends Fragment {
             paginaAtual = 0;
         }
 
-        montarLista();   // a parte do aparelho ja aparece na hora, sem esperar a internet
+        montarLista();
 
-        // ao abrir a aba, sincroniza sozinho (no maximo uma vez por minuto)
         if (System.currentTimeMillis() - ultimaSincronizacao > UM_MINUTO) {
             sincronizar();
         }
     }
 
-    /** "Servidor: online" fica verde, "offline" vermelho e "aguardando" cinza. */
     private void pintarChipServidor() {
         txtServidorChip.setText("Servidor: " + Api.statusServidor);
 
@@ -193,9 +182,6 @@ public class HistoricoFragment extends Fragment {
         txtServidorChip.setCompoundDrawableTintList(ColorStateList.valueOf(Color.parseColor(texto)));
     }
 
-    // ============================================================
-    //  FILTROS
-    // ============================================================
 
     private void criarBotoesFiltro() {
         float densidade = getResources().getDisplayMetrics().density;
@@ -214,7 +200,7 @@ public class HistoricoFragment extends Fragment {
             botao.setClickable(true);
             botao.setOnClickListener(v -> {
                 filtroAtual = filtro;
-                paginaAtual = 0;   // filtro novo: volta para a primeira pagina
+                paginaAtual = 0;
                 montarLista();
             });
 
@@ -226,7 +212,6 @@ public class HistoricoFragment extends Fragment {
         }
     }
 
-    /** O filtro escolhido fica verde-azulado com texto branco; os outros ficam cinza. */
     private void pintarBotoesFiltro() {
         for (int i = 0; i < botoesFiltro.length; i++) {
             if (i == filtroAtual) {
@@ -239,14 +224,9 @@ public class HistoricoFragment extends Fragment {
         }
     }
 
-    // ============================================================
-    //  MONTAR A LISTA (aparelho + nuvem)
-    // ============================================================
-
     private void montarLista() {
         List<Item> itens = juntarAparelhoENuvem();
 
-        // mais novo primeiro
         Collections.sort(itens, new Comparator<Item>() {
             @Override
             public int compare(Item a, Item b) {
@@ -254,7 +234,6 @@ public class HistoricoFragment extends Fragment {
             }
         });
 
-        // 1) fica so com o que o filtro escolhido deixa passar
         List<Item> filtrados = new ArrayList<>();
         for (Item item : itens) {
             if (filtroAtual == TODOS || item.tipo == filtroAtual) {
@@ -262,7 +241,6 @@ public class HistoricoFragment extends Fragment {
             }
         }
 
-        // 2) quantas paginas de 10 existem (sempre pelo menos 1)
         int totalPaginas = (filtrados.size() + POR_PAGINA - 1) / POR_PAGINA;
         if (totalPaginas < 1) {
             totalPaginas = 1;
@@ -271,7 +249,6 @@ public class HistoricoFragment extends Fragment {
             paginaAtual = totalPaginas - 1;   // ex.: a lista encolheu depois de sincronizar
         }
 
-        // 3) mostra so os 10 da pagina atual, com um cabecalho quando o dia muda ("Hoje", "Ontem"...)
         containerNuvem.removeAllViews();
         int inicio = paginaAtual * POR_PAGINA;
         int fim = Math.min(inicio + POR_PAGINA, filtrados.size());
@@ -288,7 +265,6 @@ public class HistoricoFragment extends Fragment {
             View card = getLayoutInflater().inflate(R.layout.item_evento, containerNuvem, false);
             preencherCard(card, item);
 
-            // tocar no card abre o painel de detalhes
             card.setOnClickListener(v -> mostrarDetalhes(item));
 
             containerNuvem.addView(card);
@@ -301,7 +277,6 @@ public class HistoricoFragment extends Fragment {
             txtNuvemVazio.setVisibility(View.GONE);
         }
 
-        // 4) os botoes Anterior / Proxima so aparecem se tiver mais de uma pagina
         if (totalPaginas > 1) {
             barraPaginas.setVisibility(View.VISIBLE);
         } else {
@@ -315,7 +290,6 @@ public class HistoricoFragment extends Fragment {
         Tema.aplicarEm(requireActivity());   // as views novas nascem claras
     }
 
-    /** "Hoje", "Ontem" ou a data (11/10/2026). */
     private String rotuloDoDia(long dataMs) {
         Calendar evento = Calendar.getInstance();
         evento.setTimeInMillis(dataMs);
@@ -347,7 +321,6 @@ public class HistoricoFragment extends Fragment {
         return cabecalho;
     }
 
-    /** Cores e icone de cada tipo de evento: {fundo do icone, cor do icone, desenho}. */
     private String[] estiloDoTipo(int tipo) {
         if (tipo == CANCELADOS) {
             return new String[]{"#E6EAEF", "#5A6572"};
@@ -372,7 +345,6 @@ public class HistoricoFragment extends Fragment {
         return R.drawable.ic_alerta;   // alertas e falhas
     }
 
-    /** Fundo e texto do selo de status. */
     private String[] coresDoStatus(String status) {
         if (status.equals("enviado") || status.equals("tudo bem")) {
             return new String[]{"#E3F2E5", "#1B5E20"};
@@ -418,18 +390,15 @@ public class HistoricoFragment extends Fragment {
         rolagem.post(() -> rolagem.smoothScrollTo(0, 0));   // volta para o topo da lista
     }
 
-    /** Pega os eventos do SQLite e os alertas da nuvem e tira os repetidos. */
     private List<Item> juntarAparelhoENuvem() {
         List<Item> itens = new ArrayList<>();
         boolean[] nuvemJaUsado = new boolean[registrosNuvem.size()];
 
-        // 1) o que esta no aparelho
         List<Evento> locais = banco.listarEventos(Sessao.id(requireContext()), 200);
         for (Evento local : locais) {
             int tipo = tipoDoEvento(local);
             RegistroNuvem doServidor = null;
 
-            // alerta enviado: ve se o servidor tambem tem (hora quase igual)
             if (tipo == ALERTAS && local.getStatus().equals("enviado")) {
                 int achado = acharNaNuvem(local.getDataMs(), nuvemJaUsado);
                 if (achado >= 0) {
@@ -440,7 +409,6 @@ public class HistoricoFragment extends Fragment {
             itens.add(new Item(local, tipo, doServidor));
         }
 
-        // 2) o que so o servidor tem (ex.: enviado por outra instalacao do app)
         for (int i = 0; i < registrosNuvem.size(); i++) {
             if (!nuvemJaUsado[i]) {
                 itens.add(new Item(eventoSoDaNuvem(registrosNuvem.get(i)), ALERTAS, registrosNuvem.get(i)));
@@ -449,9 +417,7 @@ public class HistoricoFragment extends Fragment {
         return itens;
     }
 
-    /** Em que filtro cada evento do aparelho entra. */
     private int tipoDoEvento(Evento e) {
-        // "Trajeto de ..." e o nome antigo: eventos salvos antes da troca de nome continuam no filtro certo
         if (e.getTitulo().startsWith("Rota") || e.getTitulo().startsWith("Trajeto")) {
             return TRAJETOS;
         }
@@ -467,7 +433,6 @@ public class HistoricoFragment extends Fragment {
         return ALERTAS;
     }
 
-    /** Devolve a posicao do registro da nuvem com a hora mais perto (e ainda nao usado), ou -1. */
     private int acharNaNuvem(long dataMs, boolean[] jaUsado) {
         int melhor = -1;
         long menorDiferenca = TOLERANCIA_MS + 1;
@@ -484,10 +449,8 @@ public class HistoricoFragment extends Fragment {
         return melhor;
     }
 
-    /** Alerta que so o servidor tem. */
     private Evento eventoSoDaNuvem(RegistroNuvem r) {
         String titulo;
-        // so quedas de verdade mandam o nivel; panico e check-in chegam sem ele
         if (Float.isNaN(r.nivelQueda)) {
             titulo = "Alerta enviado";
         } else {
@@ -502,9 +465,6 @@ public class HistoricoFragment extends Fragment {
         return new Evento(r.id, titulo, detalhe, "enviado", r.dataMs);
     }
 
-    // ============================================================
-    //  JANELA DE DETALHES (o botao "+")
-    // ============================================================
 
     private void mostrarDetalhes(Item item) {
         Evento e = item.evento;
@@ -516,14 +476,12 @@ public class HistoricoFragment extends Fragment {
             texto += "\nDetalhe: " + e.getDetalhe();
         }
 
-        // o que o app guardou na hora do evento (contagem, resultado, posicao, sensores, distancia...)
         boolean temExtra = e.getExtra() != null && !e.getExtra().isEmpty();
         if (temExtra) {
             texto += "\n" + e.getExtra();
         }
 
         if (r != null) {
-            // alerta que so o servidor tem (nao tem "extra"): usa os dados que vieram de la
             if (!temExtra) {
                 if (!r.modelo.isEmpty()) {
                     texto += "\nAparelho: " + r.modelo;
@@ -553,11 +511,9 @@ public class HistoricoFragment extends Fragment {
             texto += "\nRegistro: aguardando o servidor (toque em Sincronizar)";
         }
 
-        // Mapa.configurar() tem que vir ANTES de criar o MapView (o layout do painel tem um)
         Mapa.configurar(requireContext());
         View raiz = getLayoutInflater().inflate(R.layout.sheet_evento, null);
 
-        // cabecalho do painel: icone do tipo, titulo e selo de status
         String[] estilo = estiloDoTipo(item.tipo);
         ImageView icone = raiz.findViewById(R.id.icoSheet);
         icone.setImageResource(iconeDoTipo(item.tipo));
@@ -571,7 +527,6 @@ public class HistoricoFragment extends Fragment {
         selo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(coresStatus[0])));
         selo.setTextColor(Color.parseColor(coresStatus[1]));
 
-        // cada linha "Rotulo: valor" do texto vira uma linha do painel (o "Status" ja aparece no selo)
         LinearLayout linhas = raiz.findViewById(R.id.containerSheetLinhas);
         for (String linha : texto.split("\n")) {
             int corte = linha.indexOf(": ");
@@ -584,7 +539,6 @@ public class HistoricoFragment extends Fragment {
             linhas.addView(celula);
         }
 
-        // mapinha da posicao (some se o evento nao tem posicao)
         View tituloMapa = raiz.findViewById(R.id.txtSheetTituloMapa);
         MapView mapa = raiz.findViewById(R.id.mapaSheet);
         double[] posicao = acharPosicao(item);
@@ -597,7 +551,6 @@ public class HistoricoFragment extends Fragment {
             mapa.setMultiTouchControls(true);
             mapa.setBackgroundResource(R.drawable.bg_mapa);   // cantos arredondados
             mapa.setClipToOutline(true);
-            // o mapa esta dentro de uma area que rola: sem isso, arrastar o mapa rolaria o painel
             mapa.setOnTouchListener((v, evento) -> {
                 v.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
@@ -614,17 +567,16 @@ public class HistoricoFragment extends Fragment {
 
         BottomSheetDialog painel = new BottomSheetDialog(requireContext());
         painel.setContentView(raiz);
-        ((View) raiz.getParent()).setBackgroundColor(Color.TRANSPARENT);   // deixa aparecer o fundo arredondado do layout
+        ((View) raiz.getParent()).setBackgroundColor(Color.TRANSPARENT);
         painel.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
-        painel.getBehavior().setDraggable(false);   // arrastar e para mexer no mapa, nao para fechar (o botao Fechar fecha)
+        painel.getBehavior().setDraggable(false);
         raiz.findViewById(R.id.btnFecharSheet).setOnClickListener(v -> painel.dismiss());
-        painel.setOnDismissListener(d -> mapa.onDetach());   // solta o mapa quando o painel fecha
+        painel.setOnDismissListener(d -> mapa.onDetach());
 
-        Tema.aplicarNaView(raiz);   // o painel e outra janela: pinta no tema claro/escuro atual
+        Tema.aplicarNaView(raiz);
         painel.show();
     }
 
-    /** Acha latitude e longitude do evento: primeiro no registro do servidor, depois no texto "Localização: lat, lon". */
     private double[] acharPosicao(Item item) {
         if (item.nuvem != null && item.nuvem.temPosicao) {
             return new double[]{item.nuvem.latitude, item.nuvem.longitude};
@@ -639,9 +591,6 @@ public class HistoricoFragment extends Fragment {
         return null;
     }
 
-    // ============================================================
-    //  NUVEM: baixar os alertas deste usuario do servidor
-    // ============================================================
 
     private void sincronizar() {
         if (sincronizando) {
@@ -654,7 +603,6 @@ public class HistoricoFragment extends Fragment {
 
         Context contexto = requireContext().getApplicationContext();
 
-        // rede nunca na thread principal
         executor.execute(() -> {
             try {
                 List<RegistroNuvem> registros = NuvemApi.buscarMeusAlertas(contexto);
@@ -683,11 +631,7 @@ public class HistoricoFragment extends Fragment {
         montarLista();
     }
 
-    // ============================================================
-    //  LINHA DA LISTA
-    // ============================================================
 
-    /** Preenche uma linha do historico. E "static" porque a tela Inicio tambem usa (no "Ultimo evento"). */
     public static void preencherLinha(View linha, Evento evento) {
         TextView hora = linha.findViewById(R.id.txtItemHora);
         TextView titulo = linha.findViewById(R.id.txtItemTitulo);
@@ -704,26 +648,24 @@ public class HistoricoFragment extends Fragment {
             detalhe.setText(evento.getDetalhe());
         }
 
-        // cor do selo de status
         String fundo, texto;
         if (evento.getStatus().equals("enviado") || evento.getStatus().equals("tudo bem")) {
-            fundo = "#E3F2E5";   // verde
+            fundo = "#E3F2E5";
             texto = "#1B5E20";
         } else if (evento.getStatus().equals("falha no envio")) {
-            fundo = "#FDECEA";   // vermelho
+            fundo = "#FDECEA";
             texto = "#B71C1C";
         } else if (evento.getStatus().equals("concluído")) {
-            fundo = "#D6EDF0";   // azul
+            fundo = "#D6EDF0";
             texto = "#0B5560";
         } else {
-            fundo = "#E6EAEF";   // cinza (cancelado)
+            fundo = "#E6EAEF";
             texto = "#3A4651";
         }
         status.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(fundo)));
         status.setTextColor(Color.parseColor(texto));
     }
 
-    /** Roda na thread principal, mas so se o fragment ainda estiver preso a uma tela. */
     private void naUi(Runnable acao) {
         Activity tela = getActivity();
         if (tela != null) {

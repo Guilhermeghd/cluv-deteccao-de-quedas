@@ -52,24 +52,17 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * MainActivity: aqui ficam TODOS os sensores (igual nos apps do professor) e a barra de abas FIXA.
- * So o conteudo em cima da barra muda (abas Trajeto, Clima, Historico e Perfil sao fragments):
- *  - aba INICIO: deteccao de queda, botao de panico e resumo
- *  - o teste de sensores (leitura ao vivo de cada sensor) abre numa janela, pelo botao do Perfil
- *  - o tema claro/escuro pelo sensor de luz vale para todas as telas
- */
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
 
-    // limites da deteccao de queda
-    private static final float LIMITE_IMPACTO = 25f;   // m/s2 (parado da ~9,8)
-    private static final float LIMITE_GIRO = 3.5f;     // rad/s
-    private static final long JANELA_MS = 1500;        // o impacto e o giro precisam acontecer quase juntos
+    private static final float LIMITE_IMPACTO = 25f;
+    private static final float LIMITE_GIRO = 3.5f;
+    private static final long JANELA_MS = 1500;
 
-    // as partes do layout: o Inicio e uma view daqui; Trajeto, Clima, Historico e Perfil sao fragments
+
     private View abaInicio, containerAbas;
     private int abaAtual = BarraAbas.INICIO;
-    private final Fragment[] fragmentsAbas = new Fragment[5];   // so TRAJETO, CLIMA, HISTORICO e PERFIL usam
+    private final Fragment[] fragmentsAbas = new Fragment[5];
 
     // aba Inicio
     private TextView txtOla, txtDataHoje, txtAvatar, txtStatusMonitor, txtStatusSensores, txtContagemChip;
@@ -79,30 +72,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private View btnPanico;
     private ImageButton btnSair;
 
-    // card do clima (a temperatura em cima, como pediu o novo visual)
     private TextView txtClimaTemp, txtClimaDesc, txtClimaDetalhe, txtClimaVento, txtClimaUmidade, txtClimaPressao, txtClimaRisco;
     private ImageView imgClimaInicio;
     private long ultimaConsultaClima = 0;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    // janela "Testar sensores" (so existem enquanto ela esta aberta; fora disso ficam null)
     private Dialog dialogSensores;
     private View raizDialogSensores;
     private TextView txtModoTema, txtLocalizacao;
     private TextView txtAcelerometro, txtGiroscopio, txtProximidade, txtLuz, txtBarometro, txtTemperatura;
-
-    private Tema tema;   // pinta todas as telas de claro/escuro pelo sensor de luz
-
+    private Tema tema;
     private SensorManager sensorManager;
     private Sensor acelerometro, giroscopio, sensorProximidade, sensorLuz, barometro, sensorTemperatura;
 
-    // deteccao de queda
-    private long tempoImpacto = 0;    // quando aconteceu o ultimo impacto forte (0 = nenhum)
-    private long tempoGiro = 0;       // quando aconteceu o ultimo giro forte
+    private long tempoImpacto = 0;
+    private long tempoGiro = 0;
     private float maiorImpacto = 0;
     private boolean alertaAberto = false;
 
-    // botao "Simular queda": cada toque usa o proximo valor fixo (leve, moderada, grave) so para testar
     private static final float[] SIMULACAO_G = {3f, 5f, 7f};
     private int proximaSimulacao = 0;
 
@@ -128,15 +115,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             return insets;
         });
 
-        //
-        // Barra de abas: so trocam a parte visivel desta tela
-        //
+
         for (int i = 0; i < BarraAbas.IDS_ABAS.length; i++) {
             int aba = i;
             findViewById(BarraAbas.IDS_ABAS[i]).setOnClickListener(v -> mostrarAba(aba));
         }
 
-        // "voltar": nas outras abas volta para o Inicio; no Inicio fecha o app
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -151,14 +135,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         abaInicio = findViewById(R.id.abaInicio);
         containerAbas = findViewById(R.id.containerAbas);
 
-        // se a tela foi recriada, os fragments ja existem: pega de volta em vez de criar outro
         FragmentManager fm = getSupportFragmentManager();
         fragmentsAbas[BarraAbas.TRAJETO] = fm.findFragmentByTag("aba" + BarraAbas.TRAJETO);
         fragmentsAbas[BarraAbas.CLIMA] = fm.findFragmentByTag("aba" + BarraAbas.CLIMA);
         fragmentsAbas[BarraAbas.HISTORICO] = fm.findFragmentByTag("aba" + BarraAbas.HISTORICO);
         fragmentsAbas[BarraAbas.PERFIL] = fm.findFragmentByTag("aba" + BarraAbas.PERFIL);
 
-        // aba Inicio
         txtOla = findViewById(R.id.txtOla);
         txtStatusMonitor = findViewById(R.id.txtStatusMonitor);
         txtStatusSensores = findViewById(R.id.txtStatusSensores);
@@ -188,9 +170,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         banco = new UsuarioDbHelper(this);
         txtOla.setText("Olá, " + Sessao.nome(this));
 
-        //
-        // Sensores: pega cada um e verifica se existe no aparelho
-        //
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         acelerometro = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         giroscopio = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
@@ -211,32 +191,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             txtStatusSensores.setText("Acelerômetro e giroscópio ativos");
         }
 
-        //
-        // Localizacao: pede a permissao (quando o usuario responder, o onResume liga o GPS)
-        //
+
         if (!Gps.temPermissao(this)) {
             requestPermissions(new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
 
-        //
-        // Botoes
-        //
         btnPanico.setOnClickListener(v -> abrirAlerta("PANICO", "Botão de pânico acionado", 5, 0));
         btnVerHistorico.setOnClickListener(v -> mostrarAba(BarraAbas.HISTORICO));
         btnSair.setOnClickListener(v -> pedirSaida());
         findViewById(R.id.cardClimaInicio).setOnClickListener(v -> mostrarAba(BarraAbas.CLIMA));
 
         mostrarAba(BarraAbas.INICIO);
-    }// fim do onCreate
+    }
 
-    /** Para outras telas (fragments) pedirem para abrir uma aba, ex.: o Trajeto leva ao Perfil. */
     public void abrirAba(int aba) {
         mostrarAba(aba);
     }
 
-    /** Troca o conteudo que aparece em cima da barra. A barra em si nao mexe. */
     private void mostrarAba(int aba) {
         if (aba < BarraAbas.INICIO || aba > BarraAbas.PERFIL) {
             aba = BarraAbas.INICIO;
@@ -246,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         abaInicio.setVisibility(aba == BarraAbas.INICIO ? View.VISIBLE : View.GONE);
         containerAbas.setVisibility(aba == BarraAbas.INICIO ? View.GONE : View.VISIBLE);
 
-        // cria o fragment na primeira vez e depois so esconde/mostra (assim o trajeto continua contando)
         FragmentTransaction troca = getSupportFragmentManager().beginTransaction();
         for (int i = BarraAbas.TRAJETO; i <= BarraAbas.PERFIL; i++) {
             if (i == aba && fragmentsAbas[i] == null) {
@@ -263,23 +235,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         troca.commitNow();
 
         BarraAbas.marcar(this, abaAtual);
-        tema.aplicar();   // pinta o fragment novo e o marcar(), que repinta as abas com a cor clara
+        tema.aplicar();
     }
 
     private Fragment criarFragment(int aba) {
         if (aba == BarraAbas.TRAJETO) {
-            return new RotaFragment();
+            return new RotaActivity();
         } else if (aba == BarraAbas.CLIMA) {
-            return new ClimaFragment();
+            return new ClimaActivity();
         } else if (aba == BarraAbas.HISTORICO) {
-            return new HistoricoFragment();
+            return new HistoricoActivity();
         }
-        return new PerfilFragment();
+        return new PerfilActivity();
     }
 
-    // ============================================================
-    //  JANELA "TESTAR SENSORES" (abre pelo botao do Perfil)
-    // ============================================================
 
     public void abrirTesteSensores() {
         View raiz = getLayoutInflater().inflate(R.layout.dialog_sensores, null);
@@ -294,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         txtTemperatura = raiz.findViewById(R.id.txtTemperatura);
         txtLocalizacao = raiz.findViewById(R.id.txtLocalizacao);
 
-        // cada sensor mostra "sensor inexistente" ou "aguardando" ate chegar a primeira leitura
         mostrarSeExiste(acelerometro, txtAcelerometro);
         mostrarSeExiste(giroscopio, txtGiroscopio);
         mostrarSeExiste(sensorProximidade, txtProximidade);
@@ -320,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         dialogSensores.setContentView(raiz);
         raiz.findViewById(R.id.btnFecharSensores).setOnClickListener(v -> dialogSensores.dismiss());
 
-        // ao fechar, solta as views (a MainActivity so escreve nelas enquanto a janela existe)
         dialogSensores.setOnDismissListener(d -> {
             txtModoTema = null;
             txtAcelerometro = null;
@@ -336,10 +303,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         dialogSensores.show();
         dialogSensores.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        Tema.aplicarNaView(raiz);   // a janela ja abre no tema claro/escuro certo
+        Tema.aplicarNaView(raiz);
     }
 
-    /** So escreve se a janela de sensores estiver aberta (senao o campo e null). */
     private void mostrar(TextView campo, String texto) {
         if (campo != null) {
             campo.setText(texto);
@@ -368,7 +334,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
 
-        // SENSOR_DELAY_GAME (~20 ms): um impacto dura muito pouco, o NORMAL perderia o pico
         if (acelerometro != null) {
             sensorManager.registerListener(this, acelerometro, SensorManager.SENSOR_DELAY_GAME);
         }
@@ -390,7 +355,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         Gps.ligar(this, this);
 
-        // comeca a deteccao do zero (ex.: voltando da tela de alerta)
         tempoImpacto = 0;
         tempoGiro = 0;
         maiorImpacto = 0;
@@ -421,9 +385,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    // ============================================================
-    //  LEITURA DOS SENSORES
-    // ============================================================
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -435,7 +396,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
-            // forca total nos 3 eixos (nao importa como o celular esta virado)
             float forca = (float) Math.sqrt(x * x + y * y + z * z);
 
             if (forca > LIMITE_IMPACTO) {
@@ -445,7 +405,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
 
-            // o acelerometro manda ~50 leituras por segundo: o texto so muda 5 vezes por segundo
             if (agora - ultimaAtualizacaoTela > 200) {
                 ultimaAtualizacaoTela = agora;
                 mostrar(txtAcelerometro, String.format(Locale.getDefault(), "%.1f m/s²", forca));
@@ -467,7 +426,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         if (tipo == Sensor.TYPE_PROXIMITY) {
-            // a maioria so informa "perto" (0) ou "longe" (alcance maximo)
             if (valor < sensorProximidade.getMaximumRange()) {
                 mostrar(txtProximidade, "coberto (bolso)");
             } else {
@@ -477,11 +435,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         if (tipo == Sensor.TYPE_LIGHT) {
             mostrar(txtLuz, String.format(Locale.getDefault(), "%.1f lux", valor));
-            // mesma regra da AtividadeLuminosidade (a classe Tema pinta a tela)
             if (Tema.atualizar(valor)) {
                 tema.aplicar();
                 if (raizDialogSensores != null) {
-                    Tema.aplicarNaView(raizDialogSensores);   // a janela de sensores tambem muda de tema
+                    Tema.aplicarNaView(raizDialogSensores);
                 }
             }
             if (Tema.escuro) {
@@ -492,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         if (tipo == Sensor.TYPE_PRESSURE) {
-            Leituras.salvarPressao(valor);   // guarda para mandar para a API
+            Leituras.salvarPressao(valor);
             if (valor > 300 && valor < 1100) {
                 mostrar(txtBarometro, String.format(Locale.getDefault(), "%.1f hPa", valor));
             } else {
@@ -508,24 +465,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mostrar(txtTemperatura, "sem leitura válida");   // o emulador manda -1,0E30
             }
         }
-    }// fim da onSensorChanged
+    }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    // ============================================================
-    //  DETECCAO DE QUEDA
-    //  Queda = impacto forte (acelerometro) + giro forte (giroscopio) quase ao mesmo tempo.
-    //  So o impacto da muito alarme falso (ex.: largar o celular na mesa).
-    // ============================================================
+
 
     private void verificarQueda(long agora) {
         if (tempoImpacto == 0 || alertaAberto) {
             return;
         }
 
-        // impacto antigo e sem giro: nao foi queda, esquece
         if (agora - tempoImpacto > JANELA_MS) {
             tempoImpacto = 0;
             maiorImpacto = 0;
@@ -534,7 +486,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         boolean girou;
         if (giroscopio == null) {
-            girou = true;   // celular sem giroscopio: usa so o impacto
+            girou = true;
         } else {
             girou = tempoGiro != 0 && Math.abs(tempoImpacto - tempoGiro) <= JANELA_MS;
         }
@@ -546,10 +498,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    /**
-     * Simula uma queda com valor fixo: 3 G, 5 G e 7 G, em sequencia. O detalhe precisa comecar com "Queda simulada".
-     * O botao fica na tela Perfil, junto do teste de sensores.
-     */
+
     public void simularQueda() {
         float g = SIMULACAO_G[proximaSimulacao];
         proximaSimulacao = (proximaSimulacao + 1) % SIMULACAO_G.length;
@@ -565,9 +514,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         AlertaActivity.abrir(this, tipo, detalhe, segundos, impacto);
     }
 
-    // ============================================================
-    //  LOCALIZACAO
-    // ============================================================
 
     @Override
     public void onLocationChanged(Location location) {
@@ -577,13 +523,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         atualizarResumo();
         if (ClimaDados.ultimo == null) {
-            atualizarClimaInicio();   // primeira posicao: ja mostra o clima na tela Inicio
+            atualizarClimaInicio();
         }
     }
 
-    // ============================================================
-    //  RESUMO DO INICIO (posicao, bateria, servidor e ultimo evento)
-    // ============================================================
 
     private void atualizarResumo() {
         Location local = Leituras.localizacao;
@@ -612,11 +555,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    // ============================================================
-    //  CABECALHO E CLIMA DA TELA INICIO
-    // ============================================================
 
-    /** Avatar com a inicial do nome, "Ola, Nome" e a data de hoje. */
     private void atualizarCabecalho() {
         String nome = Sessao.nome(this);
         txtOla.setText("Olá, " + nome);
@@ -626,12 +565,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             txtAvatar.setText(nome.substring(0, 1).toUpperCase());
         }
 
-        // "sábado, 11 de outubro" com a primeira letra maiuscula
         String data = new SimpleDateFormat("EEEE, d 'de' MMMM", Locale.forLanguageTag("pt-BR")).format(new Date());
         txtDataHoje.setText(data.substring(0, 1).toUpperCase() + data.substring(1));
     }
 
-    /** Mostra o ultimo clima que ja temos e, se estiver velho (mais de 10 min), consulta de novo. */
     private void atualizarClimaInicio() {
         long agora = System.currentTimeMillis();
         ClimaDados clima = ClimaDados.ultimo;
@@ -652,7 +589,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (velho && local != null && agora - ultimaConsultaClima > 60000) {
             ultimaConsultaClima = agora;
 
-            // rede nunca na thread principal
             executor.execute(() -> {
                 try {
                     ClimaDados novo = ClimaApi.consultar(local);
@@ -683,7 +619,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         txtClimaPressao.setText(c.pressao + " hPa");
         imgClimaInicio.setImageResource(c.iconeDrawable());
 
-        // faixa de risco: verde, amarela ou vermelha (as mesmas cores da aba Clima)
         String fundo, texto, frase;
         if (c.nivelRisco == 2) {
             fundo = "#FDECEA";
@@ -702,7 +637,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         txtClimaRisco.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(fundo)));
         txtClimaRisco.setTextColor(Color.parseColor(texto));
 
-        tema.aplicar();   // as cores acima sao do tema claro; se estiver escuro, o Tema ajusta
+        tema.aplicar();
     }
 
     private void mostrarUltimoEvento() {
@@ -717,16 +652,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             btnVerHistorico.setVisibility(View.VISIBLE);
 
             View linha = getLayoutInflater().inflate(R.layout.item_historico, containerUltimoEvento, false);
-            HistoricoFragment.preencherLinha(linha, eventos.get(0));
+            HistoricoActivity.preencherLinha(linha, eventos.get(0));
             containerUltimoEvento.addView(linha);
         }
     }
 
-    // ============================================================
-    //  SAIR DA CONTA
-    // ============================================================
-
-    /** Pergunta se quer sair e, se sim, volta para o login. A tela Perfil tambem chama. */
     public void pedirSaida() {
         new AlertDialog.Builder(this)
                 .setTitle("Sair da conta?")
@@ -740,7 +670,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void irParaLogin() {
-        // CLEAR_TASK fecha todas as telas abertas (trajeto, clima...) antes de abrir o login
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

@@ -1,6 +1,5 @@
 package com.example.cluv.modelo;
 
-/** Um usuario cadastrado no aparelho (a senha nunca fica aqui). */
 public class Usuario {
 
     private final long id;

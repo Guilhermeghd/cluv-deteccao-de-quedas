@@ -12,22 +12,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
 
-/**
- * Pede a rota para o OSRM (servidor gratuito, sem chave). Mesma logica da consulta de clima: um GET que devolve JSON.
- * Usa o servidor routing.openstreetmap.de, que tem um perfil para cada meio de transporte:
- *   routed-foot (a pe), routed-bike (bicicleta) e routed-car (carro; a moto usa o mesmo, pois anda pelas mesmas ruas).
- * Exemplo: https://routing.openstreetmap.de/routed-foot/route/v1/driving/-51.03,-21.16;-51.04,-21.17?overview=full&geometries=geojson
- * ATENCAO: o OSRM pede a longitude ANTES da latitude. (O "driving" no meio do endereco e fixo, o perfil e o routed-xxx.)
- */
+
 public class RotaApi {
 
     private static final String URL_BASE = "https://routing.openstreetmap.de/";
 
-    /**
-     * Devolve a rota, ou null se o servidor nao achou caminho (NoRoute / NoSegment).
-     * Qualquer outro problema (sem internet, servidor com erro) vira uma Exception com o motivo.
-     * Rede nao pode rodar na thread principal, entao chame dentro de um executor.execute(...)
-     */
     public static Rota buscar(GeoPoint origem, GeoPoint destino, String perfil) throws Exception {
         String endereco = URL_BASE + perfil + "/route/v1/driving/"
                 + String.format(Locale.US, "%.6f,%.6f;%.6f,%.6f",
@@ -42,12 +31,10 @@ public class RotaApi {
             comm.setRequestMethod("GET");
             comm.setConnectTimeout(8000);
             comm.setReadTimeout(8000);
-            // o servidor pede que o app se identifique
             comm.setRequestProperty("User-Agent", "Cluv-AppFaculdade/1.0 (com.example.cluv)");
 
             int codigo = comm.getResponseCode();
 
-            // em erro (400, 429...) o texto da resposta vem no "errorStream"
             BufferedReader leitor;
             if (codigo == 200) {
                 leitor = new BufferedReader(new InputStreamReader(comm.getInputStream()));
@@ -77,7 +64,7 @@ public class RotaApi {
         JSONObject json = new JSONObject(texto);
         String codigo = json.optString("code");
         if (codigo.equals("NoRoute") || codigo.equals("NoSegment")) {
-            return null;   // o servidor entendeu, mas nao existe caminho ate la
+            return null;
         }
         if (!codigo.equals("Ok")) {
             throw new Exception("resposta do servidor: " + codigo);

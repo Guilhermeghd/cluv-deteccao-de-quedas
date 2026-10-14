@@ -8,11 +8,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
-/**
- * A barra de abas de baixo (layout barra_abas.xml) fica FIXA na MainActivity.
- * Clicar numa aba nao abre outra tela: a MainActivity so troca o conteudo que aparece em cima da barra.
- * Aqui ficam os numeros das abas e a pintura da aba atual.
- */
+
 public class BarraAbas {
 
     public static final int INICIO = 0;
@@ -25,7 +21,6 @@ public class BarraAbas {
             R.id.tabInicio, R.id.tabTrajeto, R.id.tabClima, R.id.tabHistorico, R.id.tabPerfil
     };
 
-    /** Pinta a aba atual (colorida e em negrito) e deixa as outras cinza. */
     public static void marcar(Activity tela, int abaAtual) {
         for (int i = 0; i < IDS_ABAS.length; i++) {
             TextView botao = tela.findViewById(IDS_ABAS[i]);

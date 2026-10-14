@@ -40,10 +40,8 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Tela CLIMA: pega a posicao do GPS e consulta o OpenWeatherMap.
- */
-public class ClimaFragment extends Fragment implements LocationListener {
+
+public class ClimaActivity extends Fragment implements LocationListener {
 
     private static final long DEZ_MINUTOS = 600000;
 
@@ -100,13 +98,12 @@ public class ClimaFragment extends Fragment implements LocationListener {
 
         btnClimaAtualizar.setOnClickListener(v -> consultarClima());
 
-        // se outra tela ja achou a posicao, consulta na hora
         if (Leituras.localizacao != null) {
             consultarClima();
         } else {
             mostrarAviso("Aguardando a localização", "O clima aparece assim que o GPS achar a sua posição.");
         }
-    }// fim do onCreate
+    }
 
     @Override
     public void onResume() {
@@ -116,14 +113,12 @@ public class ClimaFragment extends Fragment implements LocationListener {
         atualizarSeVelho();
     }
 
-    /** Voltou para a aba e o clima ja tem mais de 10 minutos: atualiza. */
     private void atualizarSeVelho() {
         if (ultimaConsulta > 0 && System.currentTimeMillis() - ultimaConsulta > DEZ_MINUTOS) {
             consultarClima();
         }
     }
 
-    /** As abas so escondem/mostram o fragment: aqui sabemos que o usuario voltou para o Clima. */
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -147,15 +142,12 @@ public class ClimaFragment extends Fragment implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Leituras.localizacao = location;
-        // primeira posicao recebida: ja consulta o clima
         if (ultimaConsulta == 0) {
             consultarClima();
         }
     }
 
-    // ============================================================
-    //  CONSULTA NA API DO CLIMA (GET)
-    // ============================================================
+
 
     private void consultarClima() {
         Location local = Leituras.localizacao;
@@ -166,7 +158,6 @@ public class ClimaFragment extends Fragment implements LocationListener {
         ultimaConsulta = System.currentTimeMillis();
         txtClimaAtualizado.setText("Atualizando...");
 
-        // rede nunca na thread principal
         executor.execute(() -> {
             try {
                 ClimaDados dados = ClimaApi.consultar(local);
@@ -183,11 +174,7 @@ public class ClimaFragment extends Fragment implements LocationListener {
         });
     }
 
-    // ============================================================
-    //  MOSTRAR NA TELA
-    // ============================================================
 
-    /** Mostra um aviso (sem GPS, sem internet...). Se ja tinha clima na tela, ele continua aparecendo. */
     private void mostrarAviso(String titulo, String texto) {
         bannerClima.setVisibility(View.VISIBLE);
         txtBannerTitulo.setText(titulo);
@@ -239,7 +226,6 @@ public class ClimaFragment extends Fragment implements LocationListener {
         txtClimaNascer.setText(c.nascer);
         txtClimaPor.setText(c.por);
 
-        // a cidade (se a API mandou)
         if (c.cidade.isEmpty()) {
             txtClimaCidade.setVisibility(View.GONE);
         } else {
@@ -247,7 +233,6 @@ public class ClimaFragment extends Fragment implements LocationListener {
             txtClimaCidade.setVisibility(View.VISIBLE);
         }
 
-        // faixa de risco: verde, amarelo ou vermelho
         txtRiscoMotivos.setText(c.motivosRisco);
         if (c.nivelRisco == 2) {
             txtRiscoTitulo.setText("Risco de perigo");
@@ -274,7 +259,6 @@ public class ClimaFragment extends Fragment implements LocationListener {
     }
 
 
-    /** Roda na thread principal, mas so se o fragment ainda estiver preso a uma tela. */
     private void naUi(Runnable acao) {
         Activity tela = getActivity();
         if (tela != null) {

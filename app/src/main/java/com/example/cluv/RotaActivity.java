@@ -73,24 +73,16 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Tela ROTA (antes chamada Trajeto):
- *  - mapa com o percurso (linha azul) e a rota ate o destino (linha verde)
- *  - barra fixa embaixo com distancia, tempo, velocidade e os botoes de iniciar/encerrar e de panico
- *  - antes de sair, avisa se o clima esta com risco
- *  - durante o trajeto manda a telemetria para a API a cada 20 s (tipo_registro = 1)
- *  - check-in (so durante o trajeto): de tempos em tempos pergunta "esta tudo bem?"
- */
-public class RotaFragment extends Fragment implements LocationListener {
 
-    // como a pessoa se desloca (o mesmo numero escolhe o nome, o perfil do servidor de rotas e a frase)
+public class RotaActivity extends Fragment implements LocationListener {
+
     private static final String[] NOMES_MEIOS = {"A pé", "Bicicleta", "Moto"};
-    private static final String[] PERFIS_ROTA = {"routed-foot", "routed-bike", "routed-car"};   // a moto usa as ruas do carro
+    private static final String[] PERFIS_ROTA = {"routed-foot", "routed-bike", "routed-car"};
     private static final String[] FRASES_MEIOS = {"a pé", "de bicicleta", "de moto"};
     private static final int[] ICONES_MEIOS = {R.drawable.ic_a_pe, R.drawable.ic_bicicleta, R.drawable.ic_moto};
 
-    private static final long INTERVALO_TELEMETRIA_MS = 20000;   // 20 segundos
-    private static final long TEMPO_RESPOSTA_CHECKIN_MS = 30000; // 30 segundos para responder
+    private static final long INTERVALO_TELEMETRIA_MS = 20000;
+    private static final long TEMPO_RESPOSTA_CHECKIN_MS = 30000;
 
     private TextView txtTrajetoKm, txtTrajetoMin, txtTrajetoVel, txtTrajetoStatus, txtProximoCheckin, txtIntervaloCheckin;
     private Button btnTrajeto;
@@ -98,24 +90,23 @@ public class RotaFragment extends Fragment implements LocationListener {
     // trajeto
     private boolean trajetoAtivo = false;
     private long inicioTrajeto = 0;
-    private float distancia = 0;              // em metros
+    private float distancia = 0;
     private Location posicaoAnterior = null;
     private String statusTelemetria = "";
-    private int telemetriasOk = 0;        // quantas telemetrias deste trajeto chegaram na API
+    private int telemetriasOk = 0;
     private int telemetriasFalha = 0;
     private boolean telaAberta = false;
-    private float velocidadeAtual = 0;     // km/h, vem do GPS
-    private long proximoCheckinMs = 0;     // quando o proximo check-in vai perguntar (0 = nenhum agendado)
+    private float velocidadeAtual = 0;
+    private long proximoCheckinMs = 0;
 
-    // mapa
     private MapView mapa;
-    private Polyline linhaPercurso;     // azul: por onde a pessoa andou
-    private Polyline linhaRota;         // verde: rota ate o destino
-    private Marker marcadorAqui;        // onde a pessoa esta agora
-    private Marker marcadorDestino;     // o ponto que ela tocou no mapa
+    private Polyline linhaPercurso;
+    private Polyline linhaRota;
+    private Marker marcadorAqui;
+    private Marker marcadorDestino;
     private GeoPoint destino = null;
     private boolean mapaCentralizado = false;
-    private boolean seguirMapa = true;      // o mapa acompanha a pessoa (para quando ela arrasta o mapa)
+    private boolean seguirMapa = true;
     private TextView txtRotaInfo;
     private Button btnTracarRota, btnLimparRota;
     private View btnCentralizar;
@@ -123,12 +114,12 @@ public class RotaFragment extends Fragment implements LocationListener {
     private TextView txtGpsChip, txtProgressoFaltam, txtProgressoTempo;
     private View cardProgresso;
     private ProgressBar barraProgresso;
-    private Rota rotaAtual = null;                       // a rota tracada (para calcular o progresso)
-    private double rotaTotalM = 0;                       // o tamanho da linha dessa rota, em metros
+    private Rota rotaAtual = null;
+    private double rotaTotalM = 0;
     private boolean gpsChipVerde = false;
-    private TextView txtRotaBarra;                       // distancia e tempo da rota, na barra de baixo
+    private TextView txtRotaBarra;
     private final TextView[] botoesMeio = new TextView[NOMES_MEIOS.length];
-    private int meioAtual = 0;                           // 0 = a pe, 1 = bicicleta, 2 = moto
+    private int meioAtual = 0;
 
     private AlertDialog dialogCheckin;
 
@@ -139,8 +130,6 @@ public class RotaFragment extends Fragment implements LocationListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // IMPORTANTE: configurar o osmdroid ANTES de inflar o layout. O MapView ja comeca a baixar o mapa
-        // quando e criado, e sem o User-Agent certo o OpenStreetMap bloqueia (erro 403 "Access blocked").
         Mapa.configurar(requireContext());
         return inflater.inflate(R.layout.fragment_trajeto, container, false);
     }
@@ -155,7 +144,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         txtTrajetoStatus = view.findViewById(R.id.txtTrajetoStatus);
         txtProximoCheckin = view.findViewById(R.id.txtProximoCheckin);
         btnTrajeto = view.findViewById(R.id.btnTrajeto);
-        // o check-in e ligado/desligado e ajustado no Perfil; aqui so aparece o status. Tocar leva ao Perfil
         view.findViewById(R.id.cardCheckin).setOnClickListener(v ->
                 ((MainActivity) requireActivity()).abrirAba(BarraAbas.PERFIL));
         txtIntervaloCheckin = view.findViewById(R.id.txtIntervaloCheckin);
@@ -180,7 +168,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         btnLimparRota.setOnClickListener(v -> limparRota());
         btnCentralizar.setOnClickListener(v -> centralizarMapa());
 
-        // mesmo botao de panico da tela Inicio: abre a contagem de 5 segundos
         view.findViewById(R.id.btnPanicoTrajeto).setOnClickListener(v ->
                 AlertaActivity.abrir(requireContext(), "PANICO", "Botão de pânico acionado", 5, 0));
 
@@ -192,7 +179,7 @@ public class RotaFragment extends Fragment implements LocationListener {
             }
         });
 
-    }// fim do onCreate
+    }
 
     @Override
     public void onResume() {
@@ -203,7 +190,7 @@ public class RotaFragment extends Fragment implements LocationListener {
         pintarBotoesMeio();
         txtIntervaloCheckin.setText("Perguntar a cada " + minutosCheckin() + " min");
         handler.removeCallbacks(timerRelogio);
-        handler.post(timerRelogio);   // o cronometro e o "proximo check-in" andam de 1 em 1 segundo
+        handler.post(timerRelogio);
     }
 
     @Override
@@ -218,7 +205,7 @@ public class RotaFragment extends Fragment implements LocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);   // para os timers
+        handler.removeCallbacksAndMessages(null);
         executor.shutdown();
         if (dialogCheckin != null && dialogCheckin.isShowing()) {
             dialogCheckin.dismiss();
@@ -229,45 +216,38 @@ public class RotaFragment extends Fragment implements LocationListener {
         }
     }
 
-    // ============================================================
-    //  GPS (barometro e temperatura sao lidos pela MainActivity e ficam em Leituras)
-    // ============================================================
 
     @Override
     public void onLocationChanged(Location location) {
         Leituras.localizacao = location;
         mostrarPosicaoNoMapa(location);
 
-        // velocidade ao vivo (o GPS informa em m/s)
         if (location.hasSpeed()) {
             velocidadeAtual = location.getSpeed() * 3.6f;
         } else {
             velocidadeAtual = 0;
         }
 
-        // chip do GPS no cabecalho
         txtGpsChip.setText("GPS ±" + Math.round(location.getAccuracy()) + " m");
         if (!gpsChipVerde) {
             gpsChipVerde = true;
             txtGpsChip.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E3F2E5")));
             txtGpsChip.setTextColor(Color.parseColor("#1B5E20"));
-            Tema.aplicarEm(requireActivity());   // se estiver no tema escuro, o Tema ajusta as cores
+            Tema.aplicarEm(requireActivity());
         }
 
         if (!trajetoAtivo) {
             return;
         }
-        // ignora posicoes imprecisas (mais de 50 m de erro)
         if (location.getAccuracy() > 50) {
             return;
         }
 
         if (posicaoAnterior == null) {
             posicaoAnterior = location;
-            linhaPercurso.addPoint(new GeoPoint(location));   // primeiro ponto da linha azul
+            linhaPercurso.addPoint(new GeoPoint(location));
         } else {
-            float passo = posicaoAnterior.distanceTo(location);   // em metros
-            // menos de 5 m e so o GPS "tremendo" com o celular parado
+            float passo = posicaoAnterior.distanceTo(location);
             if (passo > 5) {
                 distancia = distancia + passo;
                 posicaoAnterior = location;
@@ -279,22 +259,18 @@ public class RotaFragment extends Fragment implements LocationListener {
         mostrarTrajeto();
     }
 
-    // ============================================================
-    //  MAPA (osmdroid + OpenStreetMap)
-    // ============================================================
 
     private void configurarMapa(View view) {
         mapa = view.findViewById(R.id.mapa);
         mapa.setTileSource(Mapa.fonteDasRuas());
-        mapa.setBackgroundResource(R.drawable.bg_mapa);   // cantos arredondados...
-        mapa.setClipToOutline(true);                      // ...e o mapa e recortado nesse formato
+        mapa.setBackgroundResource(R.drawable.bg_mapa);
+        mapa.setClipToOutline(true);
         mapa.setMultiTouchControls(true);
 
-        // o mapa esta dentro de um ScrollView: sem isso, arrastar o mapa rolaria a tela
         mapa.setOnTouchListener((v, evento) -> {
             v.getParent().requestDisallowInterceptTouchEvent(true);
             if (evento.getAction() == MotionEvent.ACTION_MOVE) {
-                seguirMapa = false;   // a pessoa esta olhando outra parte do mapa: nao puxa de volta
+                seguirMapa = false;
             }
             return false;
         });
@@ -331,7 +307,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         marcadorDestino.setTitle("Destino");
         marcadorDestino.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-        // se outra tela ja achou a posicao, comeca nela; senao mostra o Brasil todo ate o GPS achar
         if (Leituras.localizacao != null) {
             mostrarPosicaoNoMapa(Leituras.localizacao);
         } else {
@@ -340,7 +315,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         }
     }
 
-    /** Move o marcador "voce esta aqui". Na primeira posicao recebida, o mapa vai ate la. */
     private void mostrarPosicaoNoMapa(Location location) {
         GeoPoint aqui = new GeoPoint(location);
         marcadorAqui.setPosition(aqui);
@@ -352,12 +326,11 @@ public class RotaFragment extends Fragment implements LocationListener {
             mapa.getController().setZoom(17.0);
             mapa.getController().setCenter(aqui);
         } else if (trajetoAtivo && seguirMapa) {
-            mapa.getController().animateTo(aqui);   // o mapa acompanha a pessoa andando
+            mapa.getController().animateTo(aqui);
         }
         mapa.invalidate();
     }
 
-    /** Botao "Centralizar": volta para a posicao da pessoa e o mapa volta a acompanhar. */
     private void centralizarMapa() {
         seguirMapa = true;
         Location local = Leituras.localizacao;
@@ -378,9 +351,7 @@ public class RotaFragment extends Fragment implements LocationListener {
         mapa.invalidate();
     }
 
-    // ============================================================
-    //  ROTA ATE O DESTINO (OSRM)
-    // ============================================================
+
 
     private void tracarRota() {
         Location local = Leituras.localizacao;
@@ -396,9 +367,7 @@ public class RotaFragment extends Fragment implements LocationListener {
         txtRotaInfo.setText("Buscando a rota...");
         GeoPoint origem = new GeoPoint(local);
         GeoPoint ate = destino;
-        int meio = meioAtual;   // se a pessoa trocar de meio enquanto busca, esta busca continua valendo para o antigo
-
-        // rede nunca na thread principal
+        int meio = meioAtual;
         executor.execute(() -> {
             try {
                 Rota rota = RotaApi.buscar(origem, ate, PERFIS_ROTA[meio]);
@@ -419,21 +388,18 @@ public class RotaFragment extends Fragment implements LocationListener {
         }
         linhaRota.setPoints(rota.pontos);
 
-        // guarda a rota para o progresso (so aparece com a rota em andamento)
         rotaAtual = rota;
         rotaTotalM = tamanhoDaLinha(rota.pontos);
         if (trajetoAtivo) {
             atualizarProgresso(Leituras.localizacao);
         }
 
-        // a distancia e o tempo ficam na barra de baixo, perto do botao de iniciar o trajeto
         long minutos = Math.round(rota.duracaoS / 60);
         txtRotaBarra.setText(String.format(Locale.getDefault(),
                 "Rota: %.1f km · cerca de %d min · %s", rota.distanciaM / 1000, minutos, FRASES_MEIOS[meio]));
         txtRotaBarra.setVisibility(View.VISIBLE);
         txtRotaInfo.setText("Rota traçada. A distância e o tempo estão na barra abaixo.");
 
-        // da zoom para a rota inteira caber no mapa
         if (rota.pontos.size() > 1) {
             mapa.zoomToBoundingBox(BoundingBox.fromGeoPoints(rota.pontos), true, 80);
         }
@@ -451,11 +417,8 @@ public class RotaFragment extends Fragment implements LocationListener {
         mapa.invalidate();
     }
 
-    // ============================================================
-    //  PROGRESSO DA ROTA
-    // ============================================================
 
-    /** Soma o tamanho de cada pedacinho da linha, em metros. */
+
     private double tamanhoDaLinha(List<GeoPoint> pontos) {
         double total = 0;
         for (int i = 0; i < pontos.size() - 1; i++) {
@@ -464,10 +427,7 @@ public class RotaFragment extends Fragment implements LocationListener {
         return total;
     }
 
-    /**
-     * Calcula quanto falta: acha o ponto da rota mais perto da pessoa e soma o que sobra dali ate o destino.
-     * Funciona mesmo se ela sair um pouco do caminho. So aparece com a rota em andamento e uma rota tracada.
-     */
+
     private void atualizarProgresso(Location aqui) {
         if (!trajetoAtivo || rotaAtual == null || rotaAtual.pontos.size() < 2 || rotaTotalM <= 0) {
             cardProgresso.setVisibility(View.GONE);
@@ -476,10 +436,9 @@ public class RotaFragment extends Fragment implements LocationListener {
         cardProgresso.setVisibility(View.VISIBLE);
 
         List<GeoPoint> pontos = rotaAtual.pontos;
-        double restante = rotaTotalM;   // sem posicao ainda: falta a rota inteira
+        double restante = rotaTotalM;
 
         if (aqui != null) {
-            // 1) o ponto da rota mais perto da pessoa
             int maisPerto = 0;
             double menorDistancia = Double.MAX_VALUE;
             GeoPoint pessoa = new GeoPoint(aqui);
@@ -491,7 +450,6 @@ public class RotaFragment extends Fragment implements LocationListener {
                 }
             }
 
-            // 2) o que falta dali ate o fim da rota
             restante = 0;
             for (int i = maisPerto; i < pontos.size() - 1; i++) {
                 restante += pontos.get(i).distanceToAsDouble(pontos.get(i + 1));
@@ -508,16 +466,12 @@ public class RotaFragment extends Fragment implements LocationListener {
             txtProgressoTempo.setText("");
             barraProgresso.setProgress(1000);
         } else {
-            // o tempo restante e proporcional ao que falta da rota
             long minutos = Math.round(rotaAtual.duracaoS * (restante / rotaTotalM) / 60);
             txtProgressoFaltam.setText(String.format(Locale.getDefault(), "Faltam %.1f km", restante / 1000));
             txtProgressoTempo.setText("cerca de " + minutos + " min");
         }
     }
 
-    // ============================================================
-    //  MEIO DE TRANSPORTE (a pe, bicicleta ou moto)
-    // ============================================================
 
     private void criarBotoesMeio() {
         float densidade = getResources().getDisplayMetrics().density;
@@ -538,7 +492,6 @@ public class RotaFragment extends Fragment implements LocationListener {
             botao.setClickable(true);
             botao.setOnClickListener(v -> escolherMeio(meio));
 
-            // peso 1: os tres botoes dividem a largura igualmente
             LinearLayout.LayoutParams medidas = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
             if (i > 0) {
                 medidas.setMarginStart(margem);
@@ -557,13 +510,11 @@ public class RotaFragment extends Fragment implements LocationListener {
         Config.salvarMeioTransporte(requireContext(), meio);
         pintarBotoesMeio();
 
-        // ja tinha uma rota na tela: refaz para o meio novo (o caminho e o tempo mudam)
         if (destino != null && !linhaRota.getPoints().isEmpty()) {
             tracarRota();
         }
     }
 
-    /** O meio escolhido fica verde-azulado com texto branco; os outros ficam cinza. */
     private void pintarBotoesMeio() {
         for (int i = 0; i < botoesMeio.length; i++) {
             if (i == meioAtual) {
@@ -578,11 +529,8 @@ public class RotaFragment extends Fragment implements LocationListener {
         }
     }
 
-    // ============================================================
-    //  TRAJETO + TELEMETRIA
-    // ============================================================
 
-    /** Antes de sair, olha o clima: com risco de atencao ou perigo, avisa e a pessoa decide. */
+
     private void iniciarTrajeto() {
         // se o clima foi consultado ha pouco (ex.: na aba Clima), nao precisa consultar de novo
         boolean climaRecente = ClimaDados.ultimo != null
@@ -594,20 +542,19 @@ public class RotaFragment extends Fragment implements LocationListener {
 
         Location local = Leituras.localizacao;
         if (local == null) {
-            comecarTrajeto();   // sem posicao nao tem como ver o clima
+            comecarTrajeto();
             return;
         }
 
         btnTrajeto.setEnabled(false);
         txtTrajetoStatus.setText("Verificando o clima antes de sair...");
 
-        // rede nunca na thread principal
         executor.execute(() -> {
             try {
                 ClimaDados clima = ClimaApi.consultar(local);
                 naUi(() -> avisarClimaOuComecar(clima));
             } catch (Exception e) {
-                naUi(() -> comecarTrajeto());   // sem internet: sai mesmo assim
+                naUi(() -> comecarTrajeto());
             }
         });
     }
@@ -632,7 +579,6 @@ public class RotaFragment extends Fragment implements LocationListener {
                 .show();
     }
 
-    /** Iniciar rota = verde-azulado com texto branco; Encerrar rota = cinza claro com texto escuro. */
     private void pintarBotaoPrincipal(boolean emAndamento) {
         if (emAndamento) {
             btnTrajeto.setText("Encerrar rota");
@@ -643,7 +589,7 @@ public class RotaFragment extends Fragment implements LocationListener {
             btnTrajeto.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0E7C8B")));
             btnTrajeto.setTextColor(Color.WHITE);
         }
-        Tema.aplicarEm(requireActivity());   // no tema escuro, o Tema troca as cores claras
+        Tema.aplicarEm(requireActivity());
     }
 
     private void comecarTrajeto() {
@@ -656,16 +602,16 @@ public class RotaFragment extends Fragment implements LocationListener {
         statusTelemetria = "";
         telemetriasOk = 0;
         telemetriasFalha = 0;
-        linhaPercurso.setPoints(new ArrayList<>());   // comeca uma linha azul nova
+        linhaPercurso.setPoints(new ArrayList<>());
         mapa.invalidate();
         pintarBotaoPrincipal(true);
         mostrarTrajeto();
         atualizarRelogio();
 
-        atualizarProgresso(Leituras.localizacao);   // mostra o card de progresso se ja tem rota tracada
+        atualizarProgresso(Leituras.localizacao);
 
-        handler.post(timerTelemetria);   // manda a primeira agora e depois a cada 20 s
-        agendarCheckin();                // o check-in so conta durante a rota
+        handler.post(timerTelemetria);
+        agendarCheckin();
     }
 
     private void encerrarTrajeto() {
@@ -683,7 +629,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         txtTrajetoVel.setText("0,0 km/h");
         txtTrajetoStatus.setText("Rota encerrada");
 
-        // sem trajeto nao tem check-in
         handler.removeCallbacks(timerCheckin);
         handler.removeCallbacks(semRespostaCheckin);
         proximoCheckinMs = 0;
@@ -692,7 +637,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         }
         atualizarRelogio();
 
-        // o "extra" aparece na janela de detalhes do historico
         long fimMs = System.currentTimeMillis();
         long duracaoS = (fimMs - inicioTrajeto) / 1000;
         double velocidadeMedia = 0;
@@ -713,7 +657,6 @@ public class RotaFragment extends Fragment implements LocationListener {
     private final Runnable timerTelemetria = new Runnable() {
         @Override
         public void run() {
-            // com a tela fechada o GPS esta desligado, entao nao manda dado velho
             if (telaAberta) {
                 enviarTelemetria();
             }
@@ -723,7 +666,7 @@ public class RotaFragment extends Fragment implements LocationListener {
     };
 
     private void enviarTelemetria() {
-        String dados = Api.montarDados(requireContext(), 1, 0);   // 1 = telemetria normal
+        String dados = Api.montarDados(requireContext(), 1, 0);
 
         executor.execute(() -> {
             boolean enviado = Api.enviar(dados);
@@ -755,9 +698,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         }
     }
 
-    // ============================================================
-    //  CRONOMETRO (1 em 1 segundo)
-    // ============================================================
 
     private final Runnable timerRelogio = new Runnable() {
         @Override
@@ -767,7 +707,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         }
     };
 
-    /** Atualiza o tempo do trajeto e o texto do "proximo check-in". */
     private void atualizarRelogio() {
         long agora = System.currentTimeMillis();
 
@@ -775,7 +714,6 @@ public class RotaFragment extends Fragment implements LocationListener {
             txtTrajetoMin.setText(formatarTempo((agora - inicioTrajeto) / 1000));
         }
 
-        // o Perfil pode ligar ou desligar o check-in no meio do trajeto: acompanha aqui, de segundo em segundo
         boolean ligado = Config.checkinLigado(requireContext());
         if (trajetoAtivo && ligado && proximoCheckinMs == 0) {
             agendarCheckin();
@@ -797,7 +735,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         }
     }
 
-    /** 75 segundos viram "01:15"; 3700 segundos viram "1:01:40". */
     private String formatarTempo(long segundos) {
         long horas = segundos / 3600;
         long minutos = (segundos % 3600) / 60;
@@ -808,12 +745,7 @@ public class RotaFragment extends Fragment implements LocationListener {
         return String.format(Locale.getDefault(), "%02d:%02d", minutos, resto);
     }
 
-    // ============================================================
-    //  CHECK-IN DE SEGURANCA
-    //  Pergunta "esta tudo bem?". Sem resposta em 30 s, abre a contagem de emergencia.
-    // ============================================================
 
-    /** O intervalo do check-in e ajustado na tela Perfil. */
     private int minutosCheckin() {
         return Config.checkinMinutos(requireContext());
     }
@@ -837,11 +769,9 @@ public class RotaFragment extends Fragment implements LocationListener {
     };
 
     private void mostrarCheckin() {
-        // o trajeto acabou enquanto esperava: nao pergunta
         if (!trajetoAtivo) {
             return;
         }
-        // com a tela fechada nao da para perguntar: tenta de novo no proximo ciclo
         if (!telaAberta) {
             agendarCheckin();
             return;
@@ -879,7 +809,6 @@ public class RotaFragment extends Fragment implements LocationListener {
         }
     };
 
-    /** Roda na thread principal, mas so se o fragment ainda estiver preso a uma tela. */
     private void naUi(Runnable acao) {
         Activity tela = getActivity();
         if (tela != null) {

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Barra de abas de baixo. Ela e incluida em todas as telas com <include layout="@layout/barra_abas" />.
-     Quem pinta a aba atual e liga os cliques e a classe BarraAbas.java -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F4F7"
@@ -19,7 +18,6 @@
             android:padding="16dp"
             android:orientation="vertical">
 
-            <!-- cabecalho: titulo, "atualizado as..." e o botao de atualizar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +58,6 @@
                     android:tint="#1A1F24" />
             </LinearLayout>
 
-            <!-- aviso (sem GPS, sem internet...) -->
             <LinearLayout
                 android:id="@+id/bannerClima"
                 android:layout_width="match_parent"
@@ -103,7 +100,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- temperatura, descricao, sensacao e cidade -->
             <LinearLayout
                 android:id="@+id/cardClimaHero"
                 android:layout_width="match_parent"
@@ -175,7 +171,6 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <!-- risco: a cor muda (verde, amarelo ou vermelho) -->
             <LinearLayout
                 android:id="@+id/faixaRisco"
                 android:layout_width="match_parent"
@@ -217,7 +212,6 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- detalhes -->
             <LinearLayout
                 android:id="@+id/gradeClima"
                 android:layout_width="match_parent"

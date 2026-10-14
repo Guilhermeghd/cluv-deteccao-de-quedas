@@ -21,23 +21,14 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Le de volta os alertas que este usuario mandou para o servidor do professor.
- *
- * A API do professor so tem um GET que devolve o PAINEL em HTML (50 linhas por pagina, de todos os alunos).
- * Entao aqui a gente baixa as paginas, separa cada linha da tabela e fica so com as do usuario logado
- * (mesmo aparelho E mesmo nome). Parecido com o ClimaDados, so que em vez de JSON o texto e HTML.
- *
- * ATENCAO: rede nao pode rodar na thread principal, entao chame dentro de um executor.execute(...)
- */
+
 public class NuvemApi {
 
     private static final String URL_PAINEL = "https://ideaberta.com.br/socorro/";
-    private static final int FILTRO_QUEDAS = 2;      // 0 = todos, 1 = normais, 2 = so alertas (tipo_registro 2)
-    private static final int MAX_PAGINAS = 8;        // nao baixa o painel inteiro: pagina de 180 KB cada
+    private static final int FILTRO_QUEDAS = 2;
+    private static final int MAX_PAGINAS = 8;
     private static final int MAX_REGISTROS = 30;
 
-    // pedacos que a gente procura em cada linha da tabela
     private static final Pattern P_ID = Pattern.compile("#(\\d+)</td>");
     private static final Pattern P_DATA = Pattern.compile("font-monospace text-dark\">([^<]+)</td>");
     private static final Pattern P_USUARIO = Pattern.compile("<strong class=\"text-dark\">([^<]*)</strong>");
@@ -50,7 +41,6 @@ public class NuvemApi {
     private static final Pattern P_TEMPERATURA = Pattern.compile("(-?[0-9.]+)\\s*°C");
     private static final Pattern P_PRESSAO = Pattern.compile("([0-9.]+)\\s*hPa");
 
-    /** Devolve os alertas do usuario logado, do mais novo para o mais antigo. */
     public static List<RegistroNuvem> buscarMeusAlertas(Context context) throws Exception {
         String meuAparelho = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         String meuNome = Sessao.nome(context);
@@ -62,7 +52,7 @@ public class NuvemApi {
             List<RegistroNuvem> daPagina = lerLinhas(html);
 
             if (daPagina.isEmpty()) {
-                break;   // acabaram as paginas
+                break;
             }
             for (RegistroNuvem r : daPagina) {
                 if (ehMeu(r, meuAparelho, meuNome)) {
@@ -76,7 +66,6 @@ public class NuvemApi {
         return meus;
     }
 
-    /** E meu quando o aparelho e o nome batem. O painel mostra o ID do aparelho cortado, entao compara o comeco. */
     private static boolean ehMeu(RegistroNuvem r, String meuAparelho, String meuNome) {
         if (meuAparelho == null || r.deviceId.isEmpty()) {
             return false;
@@ -103,7 +92,7 @@ public class NuvemApi {
 
             BufferedReader leitor = new BufferedReader(
                     new InputStreamReader(comm.getInputStream(), StandardCharsets.UTF_8));
-            StringBuilder texto = new StringBuilder();   // StringBuilder: a pagina tem uns 180 KB
+            StringBuilder texto = new StringBuilder();
             String linha;
             while ((linha = leitor.readLine()) != null) {
                 texto.append(linha).append('\n');
@@ -117,7 +106,6 @@ public class NuvemApi {
         }
     }
 
-    /** Separa o HTML em linhas da tabela (cada uma comeca com <tr class="...">) e le os campos de cada uma. */
     private static List<RegistroNuvem> lerLinhas(String html) {
         List<RegistroNuvem> lista = new ArrayList<>();
 
@@ -127,7 +115,7 @@ public class NuvemApi {
         }
         String[] linhas = html.substring(inicioTabela).split("<tr class=\"");
 
-        for (int i = 1; i < linhas.length; i++) {   // a posicao 0 e o que vem antes da primeira linha
+        for (int i = 1; i < linhas.length; i++) {
             String linha = linhas[i];
 
             RegistroNuvem r = new RegistroNuvem();
@@ -164,7 +152,6 @@ public class NuvemApi {
         return lista;
     }
 
-    /** "09/10/2026 19:08:59" vira milissegundos (na hora do celular), para comparar com o historico do aparelho. */
     private static long lerHora(String texto) {
         try {
             Date data = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).parse(texto);
@@ -172,7 +159,6 @@ public class NuvemApi {
                 return data.getTime();
             }
         } catch (Exception e) {
-            // hora em outro formato: fica sem hora e so nao junta com o aparelho
         }
         return 0;
     }
@@ -196,7 +182,6 @@ public class NuvemApi {
         }
     }
 
-    /** O HTML escreve "&amp;" no lugar de "&" etc.; aqui volta para o texto normal. */
     private static String textoLimpo(String texto) {
         if (texto == null) {
             return "";

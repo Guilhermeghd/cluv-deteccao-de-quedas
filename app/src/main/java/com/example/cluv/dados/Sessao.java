@@ -5,7 +5,6 @@ import com.example.cluv.modelo.Usuario;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/** Guarda quem esta logado, para o app nao pedir login toda vez que abre. */
 public class Sessao {
 
     private static final String PREFS = "cluv_sessao";
@@ -25,7 +24,6 @@ public class Sessao {
                 .apply();
     }
 
-    /** Troca so o nome guardado na sessao (o usuario continua logado). */
     public static void atualizarNome(Context context, String nome) {
         prefs(context).edit().putString(CHAVE_NOME, nome).apply();
     }

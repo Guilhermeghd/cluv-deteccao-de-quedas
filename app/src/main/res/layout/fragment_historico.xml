@@ -19,7 +19,6 @@
             android:padding="16dp"
             android:orientation="vertical">
 
-            <!-- cabecalho: titulo, estado do servidor e o icone de sincronizar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +78,6 @@
                 android:textColor="#5A6572"
                 android:textSize="13sp" />
 
-            <!-- filtros (os botoes sao criados pelo codigo) -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -92,14 +90,12 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-            <!-- a lista: cabecalhos de dia e um card por evento -->
             <LinearLayout
                 android:id="@+id/containerNuvem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
 
-            <!-- nada para mostrar -->
             <TextView
                 android:id="@+id/txtNuvemVazio"
                 android:layout_width="match_parent"
@@ -117,7 +113,6 @@
                 android:textSize="14sp"
                 android:visibility="gone" />
 
-            <!-- paginas -->
             <LinearLayout
                 android:id="@+id/barraPaginas"
                 android:layout_width="match_parent"

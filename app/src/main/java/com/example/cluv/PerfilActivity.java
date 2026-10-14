@@ -31,17 +31,8 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Tela PERFIL: o usuario mexe nos dados dele e nos ajustes de seguranca.
- *  - nome (botao Editar: mudar o nome apaga o historico, e a janela avisa isso)
- *  - check-in de seguranca: liga/desliga e de quanto em quanto tempo pergunta (botoes - e +)
- *  - contagem da queda (botoes - e +)
- *  - avisos aos contatos pelo ntfy (canal, convite, teste)
- *  - teste de sensores (abre uma janela) e simulacao de queda
- *  - sair da conta
- * Tudo salva na hora, nao tem botao "Salvar".
- */
-public class PerfilFragment extends Fragment {
+
+public class PerfilActivity extends Fragment {
 
     private TextView txtAvatarPerfil, txtNomePerfil, txtEmailPerfil, txtCanalNtfy;
     private TextView txtCheckinValor, txtContagemValor;
@@ -76,7 +67,6 @@ public class PerfilFragment extends Fragment {
         // nome
         view.findViewById(R.id.btnEditarNome).setOnClickListener(v -> abrirJanelaNome());
 
-        // check-in e contagem: os botoes - e + salvam na hora
         switchCheckinPerfil.setOnClickListener(v -> {
             boolean ligado = switchCheckinPerfil.isChecked();
             Config.salvarCheckinLigado(requireContext(), ligado);
@@ -91,7 +81,6 @@ public class PerfilFragment extends Fragment {
         view.findViewById(R.id.btnContagemMenos).setOnClickListener(v -> mudarContagem(false));
         view.findViewById(R.id.btnContagemMais).setOnClickListener(v -> mudarContagem(true));
 
-        // avisos aos contatos (ntfy)
         switchAvisarContatos.setOnClickListener(v -> {
             Config.salvarAvisarContatos(requireContext(), switchAvisarContatos.isChecked());
             if (switchAvisarContatos.isChecked()) {
@@ -105,7 +94,6 @@ public class PerfilFragment extends Fragment {
         btnTesteAviso.setOnClickListener(v -> enviarTesteAviso());
         view.findViewById(R.id.btnNovoCanal).setOnClickListener(v -> perguntarNovoCanal());
 
-        // ferramentas
         view.findViewById(R.id.btnTestarSensores).setOnClickListener(v ->
                 ((MainActivity) requireActivity()).abrirTesteSensores());
         view.findViewById(R.id.btnSimularQueda).setOnClickListener(v ->
@@ -120,7 +108,6 @@ public class PerfilFragment extends Fragment {
         carregarDados();
     }
 
-    /** As abas so escondem/mostram o fragment: ao voltar para o Perfil mostra os dados de novo. */
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -154,11 +141,7 @@ public class PerfilFragment extends Fragment {
         txtCanalNtfy.setText(Config.topicoNtfy(requireContext()));
     }
 
-    // ============================================================
-    //  NOME
-    // ============================================================
 
-    /** Janela com o campo do nome e o aviso de que mudar o nome apaga o historico. */
     private void abrirJanelaNome() {
         View conteudo = getLayoutInflater().inflate(R.layout.dialog_nome, null);
         EditText campo = conteudo.findViewById(R.id.editNomeDialogo);
@@ -168,12 +151,11 @@ public class PerfilFragment extends Fragment {
         AlertDialog janela = new AlertDialog.Builder(requireContext())
                 .setTitle("Mudar o nome")
                 .setView(conteudo)
-                .setPositiveButton("Mudar e apagar", null)   // o clique e definido abaixo, para nao fechar com erro
+                .setPositiveButton("Mudar e apagar", null)
                 .setNegativeButton("Cancelar", null)
                 .create();
         janela.show();
 
-        // o botao que apaga fica vermelho, para chamar a atencao
         janela.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#C62828"));
         janela.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             String novoNome = campo.getText().toString().trim();
@@ -196,18 +178,14 @@ public class PerfilFragment extends Fragment {
     private void aplicarNovoNome(String novoNome) {
         long id = Sessao.id(requireContext());
         banco.atualizarNome(id, novoNome);
-        banco.limparEventos(id);                       // apaga o historico deste aparelho
+        banco.limparEventos(id);
         Sessao.atualizarNome(requireContext(), novoNome);
 
         Toast.makeText(requireContext(), "Nome alterado e histórico apagado", Toast.LENGTH_LONG).show();
         carregarDados();
     }
 
-    // ============================================================
-    //  CHECK-IN E CONTAGEM DA QUEDA (botoes - e +)
-    // ============================================================
 
-    /** De 1 a 4 minutos anda de 1 em 1; dai para cima, de 5 em 5. */
     private void mudarCheckin(boolean aumentar) {
         int minutos = Config.checkinMinutos(requireContext());
         if (aumentar) {
@@ -234,7 +212,6 @@ public class PerfilFragment extends Fragment {
         txtCheckinValor.setText(minutos + " min");
     }
 
-    /** Anda de 5 em 5 segundos, de 10 a 60. */
     private void mudarContagem(boolean aumentar) {
         int segundos = Config.contagemQueda(requireContext());
         if (aumentar) {
@@ -252,9 +229,7 @@ public class PerfilFragment extends Fragment {
         txtContagemValor.setText(segundos + " s");
     }
 
-    // ============================================================
-    //  AVISOS AOS CONTATOS (ntfy)
-    // ============================================================
+
 
     private void copiarCanal() {
         ClipboardManager area = (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -262,7 +237,6 @@ public class PerfilFragment extends Fragment {
         Toast.makeText(requireContext(), "Canal copiado", Toast.LENGTH_SHORT).show();
     }
 
-    /** Abre a folha de compartilhar (WhatsApp, SMS, e-mail...) com as instrucoes para o contato assinar o canal. */
     private void convidarContato() {
         String canal = Config.topicoNtfy(requireContext());
         String convite = "Oi! Quero que você receba meus alertas de segurança do app Cluv.\n\n"
@@ -278,7 +252,6 @@ public class PerfilFragment extends Fragment {
         startActivity(Intent.createChooser(compartilhar, "Convidar contato"));
     }
 
-    /** Manda uma notificacao de teste para o canal: quem ja assinou deve receber na hora. */
     private void enviarTesteAviso() {
         String canal = Config.topicoNtfy(requireContext());
         String nome = Sessao.nome(requireContext());
@@ -286,7 +259,6 @@ public class PerfilFragment extends Fragment {
         btnTesteAviso.setEnabled(false);
         Toast.makeText(requireContext(), "Enviando o teste...", Toast.LENGTH_SHORT).show();
 
-        // rede nunca na thread principal
         executor.execute(() -> {
             boolean enviado = NtfyApi.enviar(canal, "TESTE do Cluv",
                     nome + " está testando o aviso aos contatos. Nenhuma emergência.", 3, "white_check_mark", "");
@@ -316,7 +288,6 @@ public class PerfilFragment extends Fragment {
                 .show();
     }
 
-    /** Roda na thread principal, mas so se o fragment ainda estiver preso a uma tela. */
     private void naUi(Runnable acao) {
         Activity tela = getActivity();
         if (tela != null) {

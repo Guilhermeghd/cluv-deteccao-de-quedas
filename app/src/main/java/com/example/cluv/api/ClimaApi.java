@@ -10,18 +10,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Consulta o clima no OpenWeatherMap (GET que devolve JSON). Fica aqui porque duas telas usam:
- * a aba Clima e o aviso de risco antes de iniciar um trajeto.
- * ATENCAO: rede nao pode rodar na thread principal, entao chame dentro de um executor.execute(...)
- */
+
 public class ClimaApi {
 
-    // A chave NAO fica no codigo: ela vem do arquivo local.properties (linha OPENWEATHER_KEY=...),
-    // que o Gradle entrega aqui como BuildConfig. Chave gratuita em https://openweathermap.org/api
-    private static final String CHAVE_OPENWEATHER = BuildConfig.OPENWEATHER_KEY;
 
-    /** Devolve o clima da posicao. Se o servidor responder erro, lanca uma Exception "O servidor respondeu HTTP ...". */
+    private static final String CHAVE_OPENWEATHER = BuildConfig.OPENWEATHER_KEY;
     public static ClimaDados consultar(Location local) throws Exception {
         if (CHAVE_OPENWEATHER.isEmpty()) {
             throw new Exception("Chave do OpenWeatherMap não configurada (veja o local.properties.example).");
@@ -44,7 +37,6 @@ public class ClimaApi {
                 throw new Exception("O servidor respondeu HTTP " + codigo + ".");
             }
 
-            // le a resposta inteira (um JSON)
             BufferedReader leitor = new BufferedReader(new InputStreamReader(comm.getInputStream()));
             String resposta = "";
             String linha;
@@ -55,7 +47,6 @@ public class ClimaApi {
 
             ClimaDados dados = ClimaDados.lerJson(resposta);
 
-            // guarda o ultimo clima para outras telas usarem sem consultar de novo
             ClimaDados.ultimo = dados;
             ClimaDados.ultimoEmMs = System.currentTimeMillis();
             return dados;

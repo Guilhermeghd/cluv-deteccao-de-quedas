@@ -32,7 +32,7 @@ public class CadastroActivity extends AppCompatActivity {
     private ImageButton btnOlhoSenha, btnOlhoConfirmar;
 
     private UsuarioDbHelper banco;
-    private Tema tema;   // claro/escuro pelo sensor de luz
+    private Tema tema;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

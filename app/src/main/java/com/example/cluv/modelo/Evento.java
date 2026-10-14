@@ -1,6 +1,5 @@
 package com.example.cluv.modelo;
 
-/** Uma linha do historico: queda, panico, trajeto, check-in... */
 public class Evento {
 
     private final long id;
@@ -8,7 +7,7 @@ public class Evento {
     private final String detalhe;
     private final String status;
     private final long dataMs;
-    private final String extra;   // varias linhas "Campo: valor" para a janela de detalhes (pode ser null)
+    private final String extra;
 
     public Evento(long id, String titulo, String detalhe, String status, long dataMs) {
         this(id, titulo, detalhe, status, dataMs, null);

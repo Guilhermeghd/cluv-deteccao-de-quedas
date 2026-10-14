@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
-/** Liga e desliga o GPS. Varias telas usam, entao fica aqui para nao repetir o codigo. */
 public class Gps {
 
     public static boolean temPermissao(Context context) {
@@ -14,7 +13,6 @@ public class Gps {
                 || context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    /** Pede a posicao a cada 5 segundos, pelo GPS e pela rede (a rede funciona dentro de casa). */
     public static void ligar(Context context, LocationListener ouvinte) {
         if (!temPermissao(context)) {
             return;
@@ -28,7 +26,6 @@ public class Gps {
                 lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, ouvinte);
             }
         } catch (SecurityException e) {
-            // sem permissao: so nao recebe posicao
         }
     }
 

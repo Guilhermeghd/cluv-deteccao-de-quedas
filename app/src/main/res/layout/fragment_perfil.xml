@@ -30,7 +30,6 @@
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
-            <!-- quem e o usuario -->
             <LinearLayout
                 android:id="@+id/cardDados"
                 android:layout_width="match_parent"
