@@ -55,16 +55,15 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
 
-    private static final float LIMITE_IMPACTO = 25f;
-    private static final float LIMITE_GIRO = 3.5f;
-    private static final long JANELA_MS = 1500;
+    private static final float LIMITE_IMPACTO = 50f;
+    private static final float LIMITE_GIRO = 7.5f;
+    private static final long JANELA_MS = 1000;
 
 
     private View abaInicio, containerAbas;
     private int abaAtual = BarraAbas.INICIO;
     private final Fragment[] fragmentsAbas = new Fragment[5];
 
-    // aba Inicio
     private TextView txtOla, txtDataHoje, txtAvatar, txtStatusMonitor, txtStatusSensores, txtContagemChip;
     private TextView txtMiniPosicao, txtMiniBateria, txtMiniServidor, txtMiniCheckin;
     private TextView txtUltimoEventoVazio, btnVerHistorico;
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // sem usuario logado, volta para o login
         if (!Sessao.logado(this)) {
             irParaLogin();
             return;

@@ -75,7 +75,6 @@ public class RotaApi {
         rota.distanciaM = primeira.getDouble("distance");
         rota.duracaoS = primeira.getDouble("duration");
 
-        // cada ponto vem como [longitude, latitude]
         JSONArray coordenadas = primeira.getJSONObject("geometry").getJSONArray("coordinates");
         for (int i = 0; i < coordenadas.length(); i++) {
             JSONArray ponto = coordenadas.getJSONArray(i);

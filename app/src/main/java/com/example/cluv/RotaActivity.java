@@ -51,6 +51,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import android.graphics.Color;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.ColorDrawable;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.config.IConfigurationProvider;
@@ -122,6 +124,8 @@ public class RotaActivity extends Fragment implements LocationListener {
     private int meioAtual = 0;
 
     private AlertDialog dialogCheckin;
+    private TextView txtCheckinContagem;     // "Sem resposta em 27 s" no aviso do check-in
+    private int segundosParaResponder = 0;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -275,7 +279,6 @@ public class RotaActivity extends Fragment implements LocationListener {
             return false;
         });
 
-        // tocar no mapa escolhe o destino
         mapa.getOverlays().add(new MapEventsOverlay(new MapEventsReceiver() {
             @Override
             public boolean singleTapConfirmedHelper(GeoPoint ponto) {
@@ -631,6 +634,7 @@ public class RotaActivity extends Fragment implements LocationListener {
 
         handler.removeCallbacks(timerCheckin);
         handler.removeCallbacks(semRespostaCheckin);
+        handler.removeCallbacks(timerContagemCheckin);
         proximoCheckinMs = 0;
         if (dialogCheckin != null && dialogCheckin.isShowing()) {
             dialogCheckin.dismiss();
@@ -777,33 +781,66 @@ public class RotaActivity extends Fragment implements LocationListener {
             return;
         }
 
-        dialogCheckin = new AlertDialog.Builder(requireContext())
-                .setTitle("Check-in de segurança")
-                .setMessage("Está tudo bem?\n\nSem resposta em 30 segundos, a contagem de emergência começa.")
-                .setCancelable(false)
-                .setPositiveButton("Estou bem", (dialogo, botao) -> {
-                    handler.removeCallbacks(semRespostaCheckin);
-                    String extra = "Resposta: Estou bem\nPergunta a cada: " + minutosCheckin() + " min\n"
-                            + Api.resumoDosDados(Api.montarDados(requireContext(), 1, 0));
-                    banco.registrarEvento(Sessao.id(requireContext()), "Check-in de segurança", "respondido", "tudo bem", extra);
-                    agendarCheckin();
-                })
-                .setNegativeButton("Preciso de ajuda", (dialogo, botao) -> {
-                    handler.removeCallbacks(semRespostaCheckin);
-                    AlertaActivity.abrir(requireContext(), "CHECKIN", "A pessoa pediu ajuda no check-in", 5, 0);
-                    agendarCheckin();
-                })
-                .show();
+        // aviso no estilo do app (cartao arredondado, contagem visivel e botoes grandes)
+        View raiz = getLayoutInflater().inflate(R.layout.dialog_checkin, null);
+        txtCheckinContagem = raiz.findViewById(R.id.txtCheckinContagem);
+        segundosParaResponder = (int) (TEMPO_RESPOSTA_CHECKIN_MS / 1000);
+        txtCheckinContagem.setText("Sem resposta em " + segundosParaResponder + " s");
 
+        dialogCheckin = new AlertDialog.Builder(requireContext())
+                .setView(raiz)
+                .setCancelable(false)
+                .create();
+
+        // o fundo padrao da caixa some e sobra so o cartao do layout (com uma margem dos lados)
+        int margem = (int) (24 * getResources().getDisplayMetrics().density);
+        dialogCheckin.getWindow().setBackgroundDrawable(new InsetDrawable(new ColorDrawable(Color.TRANSPARENT), margem));
+
+        raiz.findViewById(R.id.btnCheckinBem).setOnClickListener(v -> {
+            fecharAvisoCheckin();
+            String extra = "Resposta: Estou bem\nPergunta a cada: " + minutosCheckin() + " min\n"
+                    + Api.resumoDosDados(Api.montarDados(requireContext(), 1, 0));
+            banco.registrarEvento(Sessao.id(requireContext()), "Check-in de segurança", "respondido", "tudo bem", extra);
+            agendarCheckin();
+        });
+        raiz.findViewById(R.id.btnCheckinAjuda).setOnClickListener(v -> {
+            fecharAvisoCheckin();
+            AlertaActivity.abrir(requireContext(), "CHECKIN", "A pessoa pediu ajuda no check-in", 5, 0);
+            agendarCheckin();
+        });
+
+        Tema.aplicarNaView(raiz);   // a caixa e outra janela: pinta no tema claro/escuro atual
+        dialogCheckin.show();
+
+        handler.postDelayed(timerContagemCheckin, 1000);
         handler.postDelayed(semRespostaCheckin, TEMPO_RESPOSTA_CHECKIN_MS);
+    }
+
+    /** Conta os 30 segundos na tela do aviso (de 1 em 1 segundo). */
+    private final Runnable timerContagemCheckin = new Runnable() {
+        @Override
+        public void run() {
+            segundosParaResponder--;
+            if (segundosParaResponder > 0) {
+                txtCheckinContagem.setText("Sem resposta em " + segundosParaResponder + " s");
+                handler.postDelayed(this, 1000);
+            }
+        }
+    };
+
+    /** Para a contagem e fecha o aviso (quando a pessoa responde). */
+    private void fecharAvisoCheckin() {
+        handler.removeCallbacks(semRespostaCheckin);
+        handler.removeCallbacks(timerContagemCheckin);
+        if (dialogCheckin != null && dialogCheckin.isShowing()) {
+            dialogCheckin.dismiss();
+        }
     }
 
     private final Runnable semRespostaCheckin = new Runnable() {
         @Override
         public void run() {
-            if (dialogCheckin != null && dialogCheckin.isShowing()) {
-                dialogCheckin.dismiss();
-            }
+            fecharAvisoCheckin();
             AlertaActivity.abrir(requireContext(), "CHECKIN", "Sem resposta ao check-in de segurança", Config.contagemQueda(requireContext()), 0);
             agendarCheckin();
         }

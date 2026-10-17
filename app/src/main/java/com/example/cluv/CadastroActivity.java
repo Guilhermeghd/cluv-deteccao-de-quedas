@@ -65,7 +65,6 @@ public class CadastroActivity extends AppCompatActivity {
         btnOlhoSenha.setOnClickListener(v -> CampoForm.alternarSenha(editSenha, btnOlhoSenha));
         btnOlhoConfirmar.setOnClickListener(v -> CampoForm.alternarSenha(editConfirmar, btnOlhoConfirmar));
 
-        // ao digitar: some o erro do campo, as regras da senha acompanham e o botao muda de cor
         editNome.addTextChangedListener(new AoDigitar(() -> {
             CampoForm.limparErro(editNome, txtErroNome);
             atualizarTela();
@@ -85,7 +84,6 @@ public class CadastroActivity extends AppCompatActivity {
         atualizarTela();
     }
 
-    /** Atualiza as duas regras da senha (verde quando cumpridas) e a cor do botao. */
     private void atualizarTela() {
         String senha = editSenha.getText().toString();
         String confirmar = editConfirmar.getText().toString();
@@ -98,10 +96,9 @@ public class CadastroActivity extends AppCompatActivity {
                 && !senha.isEmpty()
                 && !confirmar.isEmpty();
         CampoForm.pintarBotao(btnCadastrar, preenchido);
-        tema.aplicar();   // se estiver no tema escuro, o Tema ajusta as cores
+        tema.aplicar();
     }
 
-    /** Regra cumprida: icone de "certo" e texto verde. Senao: circulo vazio e texto cinza. */
     private void pintarRegra(TextView regra, boolean cumprida) {
         int cor;
         int icone;
@@ -123,7 +120,6 @@ public class CadastroActivity extends AppCompatActivity {
         String senha = editSenha.getText().toString();
         String confirmar = editConfirmar.getText().toString();
 
-        // valida tudo e mostra TODOS os erros de uma vez (o primeiro campo errado recebe o foco)
         EditText primeiroErro = null;
         if (nome.length() < 2) {
             CampoForm.mostrarErro(editNome, txtErroNome, "Informe seu nome");
@@ -164,7 +160,6 @@ public class CadastroActivity extends AppCompatActivity {
             return;
         }
 
-        // ja deixa a pessoa logada e abre o app (limpa a pilha para o "voltar" nao cair no login)
         Sessao.entrar(this, new Usuario(id, nome, email));
         Toast.makeText(this, "Conta criada!", Toast.LENGTH_SHORT).show();
 

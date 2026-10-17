@@ -247,7 +247,7 @@ public class ClimaActivity extends Fragment implements LocationListener {
             pintarFaixa("#E3F2E5", "#1B5E20");
             imgRisco.setImageResource(R.drawable.ic_escudo);
         }
-        Tema.aplicarEm(requireActivity());   // as cores acima sao do tema claro; se estiver escuro, o Tema ajusta
+        Tema.aplicarEm(requireActivity());
     }
 
     private void pintarFaixa(String corFundo, String corTexto) {

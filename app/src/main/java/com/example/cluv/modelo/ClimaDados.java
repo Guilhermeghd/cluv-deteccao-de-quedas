@@ -75,7 +75,7 @@ public class ClimaDados {
 
         JSONObject vento = json.optJSONObject("wind");
         if (vento != null) {
-            c.ventoKmh = vento.optDouble("speed", 0) * 3.6;    // m/s para km/h
+            c.ventoKmh = vento.optDouble("speed", 0) * 3.6;
             c.rajadaKmh = vento.optDouble("gust", 0) * 3.6;
         }
 

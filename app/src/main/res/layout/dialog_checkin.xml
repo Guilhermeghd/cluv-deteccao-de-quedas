@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card"
+    android:backgroundTint="#FFFFFF"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="22dp">
+
+    <ImageView
+        android:id="@+id/icoCheckinDialogo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_circulo"
+        android:backgroundTint="#D6EDF0"
+        android:importantForAccessibility="no"
+        android:padding="16dp"
+        android:src="@drawable/ic_relogio"
+        android:tint="#0E7C8B" />
+
+    <TextView
+        android:id="@+id/txtCheckinTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="Check-in de segurança"
+        android:textColor="#1A1F24"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtCheckinPergunta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Está tudo bem?"
+        android:textColor="#1A1F24"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/txtCheckinContagem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_chip"
+        android:backgroundTint="#FEF3C7"
+        android:paddingStart="16dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="6dp"
+        android:text="Sem resposta em 30 s"
+        android:textColor="#6B2E07"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtCheckinNota"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="Sem resposta, a contagem de emergência começa."
+        android:textColor="#5A6572"
+        android:textSize="13sp" />
+
+    <Button
+        android:id="@+id/btnCheckinBem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:minHeight="52dp"
+        app:backgroundTint="#0E7C8B"
+        app:cornerRadius="26dp"
+        android:text="Estou bem"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnCheckinAjuda"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minHeight="52dp"
+        app:cornerRadius="26dp"
+        app:strokeColor="#C62828"
+        app:strokeWidth="1.5dp"
+        android:text="Preciso de ajuda"
+        android:textColor="#C62828"
+        android:textSize="16sp" />
+</LinearLayout>
